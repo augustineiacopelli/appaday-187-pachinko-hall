@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="apple-touch-icon" href="https://augustineiacopelli.github.io/appaday/icons/187.png">
+<meta name="apple-mobile-web-app-title" content="Pachinko">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="manifest" href="https://augustineiacopelli.github.io/appaday/manifests/187.webmanifest">
+<script src="https://augustineiacopelli.github.io/appaday/save.js" defer></script>
+<title>Pachinko Hall | AppADay 187</title>
+<meta name="theme-color" content="#070b12">
+<meta name="description" content="Six pachinko cabinets from mechanical tulips to digital reels. Seeded odds, custom ball physics, play balls only, no money.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
+<style>
+:root{--acc:#276EB7;--acc2:#8cbcf2;--bg:#070b12;--panel:#0f1624;--panel2:#162033;--ink:#e9eef7;--mut:#9fb0c8;--line:#22304a;--amber:#ffb347;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Chakra Petch',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{min-height:100dvh}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--acc2)}
+:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+#shell{position:fixed;inset:0;display:flex;flex-direction:column;background:radial-gradient(120% 70% at 50% 0%,#0f1b33 0%,var(--bg) 60%)}
+.screen{display:none;position:absolute;inset:0;flex-direction:column;min-height:0}
+.screen.active{display:flex}
+body.nopixi .screen{display:none!important}
+.lbl{font-size:.62rem;letter-spacing:.14em;color:var(--mut);display:block;line-height:1}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0;background:var(--panel2);border:1px solid var(--line);border-radius:12px}
+.icon-btn svg{width:22px;height:22px;stroke:var(--acc2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.icon-btn:active{background:var(--acc)}
+.btn{min-height:44px;padding:0 18px;background:var(--acc);color:#fff;border:0;border-radius:12px;font-weight:700;font-size:1rem;letter-spacing:.04em}
+.btn:active{filter:brightness(1.2)}
+.bar{display:flex;align-items:center;gap:8px;padding:calc(8px + var(--st)) calc(12px + var(--sr)) 8px calc(12px + var(--sl));background:linear-gradient(180deg,#0e1a31,#0a1222);border-bottom:2px solid var(--acc)}
+.bar .title{flex:1;min-width:0}
+.bar h1{margin:0;font-size:clamp(1.05rem,5.2vw,1.5rem);letter-spacing:.06em;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .sub{font-size:.7rem;color:var(--mut);letter-spacing:.12em}
+.portal{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;border:1px solid var(--line);border-radius:12px;text-decoration:none;font-weight:700;font-size:.78rem;letter-spacing:.08em;background:var(--panel2)}
+.bankbox{text-align:right;min-width:3.4rem}
+.bankbox b{display:block;font-family:Orbitron,monospace;font-size:clamp(1.05rem,5vw,1.35rem);color:var(--amber);text-shadow:0 0 8px rgba(255,179,71,.4);line-height:1.15}
+.scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#seat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr));gap:12px;padding:12px calc(12px + var(--sr)) 4px calc(12px + var(--sl))}
+.seat{position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 14px 12px 18px;background:linear-gradient(160deg,#131d31,#0c1322);border:1px solid var(--line);border-radius:16px;box-shadow:inset 5px 0 0 var(--pal);overflow:hidden}
+.seat::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 0 0,var(--pal),transparent 55%);opacity:.14;pointer-events:none}
+.seat>*{position:relative}
+.seat-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.seat-head h2{margin:0;font-size:1.25rem;letter-spacing:.04em;flex:1;min-width:0}
+.era{font-family:Orbitron,monospace;font-size:.78rem;color:var(--mut)}
+.fam{font-size:.66rem;letter-spacing:.14em;padding:3px 8px;border:1px solid var(--acc);border-radius:999px;color:var(--acc2)}
+.counter{display:flex;align-items:center;gap:12px;padding:8px 10px;background:#0a0d14;border:1px solid #2a2f3d;border-radius:12px}
+.led-wrap{display:flex;flex-direction:column;gap:3px}
+.led-lbl{font-size:.6rem;letter-spacing:.16em;color:var(--mut)}
+.led{font-family:Orbitron,monospace;font-weight:800;font-size:clamp(1.9rem,9vw,2.4rem);color:var(--amber);text-shadow:0 0 12px rgba(255,179,71,.55);letter-spacing:.08em;line-height:1}
+.cnt-side{display:flex;flex-direction:column;gap:6px;align-items:flex-start;font-size:.8rem;color:var(--mut)}
+.cnt-side b{color:var(--ink)}
+.lamp{font-size:.7rem;font-weight:700;letter-spacing:.12em;padding:3px 8px;border-radius:6px}
+.lamp.hot{background:#ff4d5e;color:#fff;box-shadow:0 0 10px rgba(255,77,94,.6)}
+.lamp.fast{background:#2f9bff;color:#04101f}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.78rem;padding:4px 9px;border:1px solid var(--line);border-radius:999px;background:#0b1220}
+.chip em{font-style:normal;color:var(--acc2);margin-left:5px;font-weight:700}
+.chip.none{color:var(--mut)}
+.tip{margin:0;font-size:.86rem;line-height:1.4;color:#c9d6ea}
+.seat-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px}
+.diff{display:inline-flex;gap:4px}
+.diff i{width:12px;height:12px;border-radius:3px;border:1px solid var(--acc);background:transparent}
+.diff i.on{background:var(--acc)}
+.foot{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 12px calc(18px + var(--sb));font-size:.78rem;color:var(--mut);text-align:center}
+.foot a{display:inline-flex;align-items:center;min-height:44px;font-weight:700;letter-spacing:.06em}
+/* cabinet */
+#hud{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:calc(6px + var(--st)) calc(10px + var(--sr)) 6px calc(10px + var(--sl));background:linear-gradient(180deg,#0e1a31,#0a1222);border-bottom:2px solid var(--acc)}
+.hud-name{flex:1;min-width:0;font-weight:700;font-size:clamp(.95rem,4.4vw,1.2rem);letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hud-bank{text-align:right;min-width:3.2rem}
+.hud-bank b{display:block;font-family:Orbitron,monospace;font-size:clamp(1rem,4.6vw,1.25rem);color:var(--amber);line-height:1.1}
+.hud-row{display:flex;align-items:center;gap:12px;width:100%;font-size:.78rem;color:var(--mut);letter-spacing:.08em}
+.hud-row b{color:var(--ink);font-family:Orbitron,monospace}
+.pill{display:inline-flex;align-items:center;min-height:28px;padding:0 12px;border-radius:999px;font-weight:700;font-size:.78rem;letter-spacing:.12em;background:var(--panel2);border:1px solid var(--line);color:var(--ink)}
+.pill.reach{background:#7a4b00;border-color:#ffb347;color:#ffe3b0}
+.pill.jp{background:#7d1021;border-color:#ff5a6e;color:#fff}
+.pill.kaku{background:#8a2331;border-color:#ff8a98;color:#fff}
+.pill.jitan{background:#0d3a6b;border-color:var(--acc2);color:#dcecff}
+#stage{position:relative;flex:1;min-height:0;background:#05080e;overflow:hidden;display:flex;flex-direction:column}
+#pixi-host{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
+#controls{position:relative;flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px calc(12px + var(--sr)) calc(8px + var(--sb)) calc(12px + var(--sl));background:#070b12;border-top:2px solid var(--acc);z-index:5}
+#stream{display:flex;flex-direction:row;gap:6px;flex:1;min-width:0}
+#stream button,#aim{flex:1;min-width:48px;min-height:48px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-weight:700;letter-spacing:.08em;font-size:.85rem}
+#stream button.on{background:var(--acc);border-color:var(--acc2);color:#fff}
+#aim{font-size:.78rem}
+#aim.on{border-color:var(--acc2)}
+#aim.demand{background:var(--amber);border-color:#fff;color:#1b1204;animation:pulse .6s infinite alternate}
+@keyframes pulse{from{box-shadow:0 0 0 0 rgba(255,179,71,.9)}to{box-shadow:0 0 0 8px rgba(255,179,71,0)}}
+@media (prefers-reduced-motion:reduce){#aim.demand{animation:none}}
+#dial{position:relative;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#26385a,#0a101c 70%);border:2px solid var(--acc);touch-action:none;cursor:grab;flex:none}
+#dial svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#dial-track{fill:none;stroke:#26334d;stroke-width:6;stroke-linecap:round}
+#dial-val{fill:none;stroke:var(--amber);stroke-width:6;stroke-linecap:round}
+#dial-thumb{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dfe8f7,#7e8da6 60%,#39465c);border:2px solid #0a101c;box-shadow:0 2px 8px rgba(0,0,0,.6);pointer-events:none}
+#dial-read{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:Orbitron,monospace;font-weight:800;font-size:.85rem;color:#fff;pointer-events:none;text-shadow:0 1px 3px #000;z-index:2}
+#refill{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:6;box-shadow:0 0 0 3px rgba(255,255,255,.15),0 10px 30px rgba(0,0,0,.6)}
+/* overlays */
+.overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(3,6,12,.78);z-index:50;padding:calc(12px + var(--st)) 12px calc(12px + var(--sb))}
+.overlay.open{display:flex}
+.sheet{width:min(94vw,30rem);max-height:88svh;overflow-y:auto;background:var(--panel);border:1px solid var(--acc);border-radius:18px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.sheet h2{margin:0 0 10px;font-size:1.3rem;letter-spacing:.05em}
+.sheet h2 small{font-family:Orbitron,monospace;font-size:.7rem;color:var(--mut);margin-left:6px}
+.sheet h3{margin:14px 0 4px;font-size:.78rem;letter-spacing:.16em;color:var(--acc2)}
+.sheet p{margin:0 0 6px;line-height:1.5;font-size:.92rem;color:#d3dff0}
+.sheet .fine{font-size:.76rem;color:var(--mut)}
+.sheet .btn{margin-top:12px;width:100%}
+.row-btn{display:block;width:100%;min-height:48px;margin:8px 0;padding:0 14px;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:12px;font-weight:700;font-size:.95rem}
+.row-btn[aria-pressed="true"]{border-color:var(--acc2)}
+.row-btn.danger{border-color:#7d1021;color:#ffb3bd}
+.row-btn.danger.armed{background:#7d1021;color:#fff}
+#live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#cdn-error{z-index:100;background:var(--bg)}
+</style>
+</head>
+<body>
+<div id="shell">
+  <section id="hall" class="screen active" aria-label="Pachinko hall">
+    <header class="bar">
+      <a class="portal" href="https://augustineiacopelli.github.io/appaday/" aria-label="AppADay portfolio">AppADay</a>
+      <div class="title"><h1>Pachinko Hall</h1><span class="sub">APPADAY 187</span></div>
+      <div class="bankbox"><span class="lbl">BALLS</span><b id="bank-hall">0</b></div>
+      <button id="gear-hall" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></button>
+    </header>
+    <div class="scroll">
+      <div id="seat-grid"></div>
+      <footer class="foot">
+        <a href="https://augustineiacopelli.github.io/appaday/">AppADay portfolio</a>
+        <span>AppADay 187 | Play balls only, no money.</span>
+      </footer>
+    </div>
+  </section>
+  <section id="cabinet" class="screen" aria-label="Pachinko cabinet">
+    <div id="hud">
+      <button id="btn-back" class="icon-btn" aria-label="Back to the hall"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div id="hud-name" class="hud-name"></div>
+      <div class="hud-bank"><span class="lbl">BALLS</span><b id="hud-bank">0</b></div>
+      <button id="btn-help" class="icon-btn" aria-label="Help for this cabinet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.8.5-1.1 1-1.1 1.8M12 17h.01"/></svg></button>
+      <button id="btn-gear" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></button>
+      <div class="hud-row"><span id="hud-mode" class="pill normal">NORMAL</span><span>SPINS <b id="hud-spins">0</b></span><span>SINCE <b id="hud-since">0</b></span></div>
+    </div>
+    <div id="stage">
+      <div id="pixi-host"></div>
+      <button id="refill" class="btn" hidden>Out of balls. Borrow 200</button>
+      <div id="controls">
+        <div id="stream" role="group" aria-label="Launch stream">
+          <button type="button" data-stream="L" class="on" aria-pressed="true" aria-label="Left stream">LEFT</button>
+          <button type="button" data-stream="R" aria-pressed="false" aria-label="Right stream">RIGHT</button>
+          <button type="button" id="aim" aria-label="Snap to the right stream">AIM</button>
+        </div>
+        <div id="dial" role="slider" tabindex="0" aria-label="Launch power, hold to fire" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path id="dial-track" d=""/><path id="dial-val" d=""/></svg>
+          <div id="dial-thumb"></div>
+          <div id="dial-read">35</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div id="settings-modal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="set-title">
+    <div class="sheet">
+      <h2 id="set-title">Settings</h2>
+      <button type="button" id="set-sound" class="row-btn" aria-pressed="true">Sound: On</button>
+      <button type="button" id="set-reduced" class="row-btn" aria-pressed="false">Reduced effects: Off</button>
+      <button type="button" id="set-reset" class="row-btn danger">Reset balls and histories</button>
+      <button type="button" id="set-close" class="btn">Done</button>
+    </div>
+  </div>
+  <div id="help-sheet" class="overlay" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="sheet" id="help-body"></div>
+  </div>
+  <div id="cdn-error" class="overlay" role="alertdialog" aria-modal="true">
+    <div class="sheet"><h2>The renderer did not load</h2><p>PixiJS could not be fetched. Check your connection and reload the page.</p></div>
+  </div>
+  <div id="live" aria-live="polite"></div>
+</div>
+<script>
+/*__SCRIPT__*/
+</script>
+</body>
+</html>
