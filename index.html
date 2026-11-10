@@ -88,13 +88,11 @@ body.nopixi .screen{display:none!important}
 #pixi-host{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
 #controls{position:relative;flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px calc(12px + var(--sr)) calc(8px + var(--sb)) calc(12px + var(--sl));background:#070b12;border-top:2px solid var(--acc);z-index:5}
 #stream{display:flex;flex-direction:row;gap:6px;flex:1;min-width:0}
-#stream button,#aim{flex:1;min-width:48px;min-height:48px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-weight:700;letter-spacing:.08em;font-size:.85rem}
+#stream button{flex:1;min-width:48px;min-height:48px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-weight:700;letter-spacing:.08em;font-size:.85rem}
 #stream button.on{background:var(--acc);border-color:var(--acc2);color:#fff}
-#aim{font-size:.78rem}
-#aim.on{border-color:var(--acc2)}
-#aim.demand{background:var(--amber);border-color:#fff;color:#1b1204;animation:pulse .6s infinite alternate}
+#stream button.demand,#stream button.on.demand{background:var(--amber);border-color:#fff;color:#1b1204;animation:pulse .6s infinite alternate}
 @keyframes pulse{from{box-shadow:0 0 0 0 rgba(255,179,71,.9)}to{box-shadow:0 0 0 8px rgba(255,179,71,0)}}
-@media (prefers-reduced-motion:reduce){#aim.demand{animation:none}}
+@media (prefers-reduced-motion:reduce){#stream button.demand{animation:none}}
 #dial{position:relative;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#26385a,#0a101c 70%);border:2px solid var(--acc);touch-action:none;cursor:grab;flex:none}
 #dial svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #dial-track{fill:none;stroke:#26334d;stroke-width:6;stroke-linecap:round}
@@ -209,7 +207,6 @@ body.nopixi .screen{display:none!important}
         <div id="stream" role="group" aria-label="Launch stream">
           <button type="button" data-stream="L" class="on" aria-pressed="true" aria-label="Left stream">LEFT</button>
           <button type="button" data-stream="R" aria-pressed="false" aria-label="Right stream">RIGHT</button>
-          <button type="button" id="aim" aria-label="Snap to the right stream">AIM</button>
         </div>
         <div id="dial" role="slider" tabindex="0" aria-label="Launch power, hold to fire" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35">
           <svg viewBox="0 0 100 100" aria-hidden="true"><path id="dial-track" d=""/><path id="dial-val" d=""/></svg>
@@ -2189,7 +2186,6 @@ function setStream(s) {
     bs[i].classList.toggle('on', on);
     bs[i].setAttribute('aria-pressed', on ? 'true' : 'false');
   }
-  document.getElementById('aim').classList.toggle('on', s === 'R');
   if (VIEW) VIEW.aim.stream = s;
 }
 function powerFromEvent(e) {
@@ -2243,7 +2239,6 @@ function bindInput() {
   for (var i = 0; i < sb.length; i++) {
     sb[i].addEventListener('click', function (e) { setStream(e.currentTarget.getAttribute('data-stream')); });
   }
-  document.getElementById('aim').addEventListener('click', function () { setStream('R'); });
   dial.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setPower(IN.power - 0.04); }
     else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setPower(IN.power + 0.04); }
@@ -2475,8 +2470,10 @@ function syncHud(force) {
   pill.className = 'pill ' + lb.cls;
   $('hud-spins').textContent = MACH.rec.spins;
   $('hud-since').textContent = MACH.rec.since;
-  var dem = MACH.aimDemand() && IN.stream !== 'R';
-  $('aim').classList.toggle('demand', dem);
+  /* the attacker only takes right stream shots, so the RIGHT button itself warns */
+  var dem = MACH.aimDemand() && IN.stream !== 'R', rb = $('stream').querySelector('[data-stream="R"]');
+  rb.classList.toggle('demand', dem);
+  rb.setAttribute('aria-label', dem ? 'Right stream, needed now for the attacker' : 'Right stream');
   if (MACH.rec.since >= 250) award('patience');
   if (STATE.tray >= 2000) award('heavy');
   var dry = STATE.tray <= 0 && WORLD.active() === 0;
@@ -2655,7 +2652,7 @@ function buildHelp() {
          'When the last reel stops dead on the matching symbol and holds, it has not decided yet: it either slips one place past you or slides home.</p>';
   }
   h += '<h3>Jackpot</h3><p>' + p.rounds + ' rounds of up to ' + p.balls + ' balls, ' + p.perBall + ' each.' +
-       (p.aim === 'right' ? ' The attacker only catches right stream shots, so flip the stream when the AIM lamp pulses.' : ' Any stream works while the feature is open.') + '</p>';
+       (p.aim === 'right' ? ' The attacker only catches right stream shots, so tap RIGHT while it pulses amber.' : ' Any stream works while the feature is open.') + '</p>';
   if (c.variant === 'senpuku') h += '<h3>Hidden mode</h3><p>About ' + Math.round(c.senpuku.p2R * 100) + ' percent of hits are a short 2R. Roughly half of those secretly switch on high odds for ' + 100 + ' spins. The machine looks normal, so read the history.</p>';
   if (c.variant === 'battle') h += '<h3>Duel</h3><p>After the rounds the LCD runs a duel. Win and you get kakuhen. Lose and you get jitan.</p>';
   if (c.variant === 'kenri') h += '<h3>Gates</h3><p>Pass the three gates in order, 1 then 2 then 3. A wrong gate resets the chain, and gate 1 starts it again. Completing it gives the right to a very likely hit on the next spin.</p>';

@@ -110,5 +110,22 @@ async function newPage(browser,w,h,opts){
     await page.screenshot({path:'/tmp/cnt_case.png'});
     console.log(errs.filter(e=>!/ERR_FAILED/.test(e)).join('\n')||'no page errors');
   }
+
+  if(mode==='aimtest'){
+    const {page,errs}=await newPage(browser,375,667);
+    await page.goto(FILE); await page.waitForSelector('html.ready',{timeout:15000});
+    await page.evaluate(()=>{STATE.tray=4000; showCabinet('digi');});
+    const look=()=>page.evaluate(()=>{const b=[...document.querySelectorAll('#stream button')].map(e=>{const c=getComputedStyle(e);const r=e.getBoundingClientRect();return e.textContent+' w'+Math.round(r.width)+' h'+Math.round(r.height)+' bg'+c.backgroundColor+' cls['+e.className+']';});return b.join(' | ');});
+    console.log('idle   ',await look());
+    await page.evaluate(()=>{const st=new OutcomeStream(31,0);for(let i=0;i<200000;i++){const o=st.next();const r=evalSpin(CAB,o,{mode:'normal',hid:false,kenri:false});if(r.hit){MACH.rules.route(CAB,o,r);MACH.beginJackpot(r);return;}}});
+    await new Promise(r=>setTimeout(r,5000));
+    console.log('demand ',await look(),'| aimDemand',await page.evaluate(()=>MACH.aimDemand()));
+    await page.screenshot({path:'/tmp/aim_demand.png'});
+    await page.evaluate(()=>setStream('R'));
+    await new Promise(r=>setTimeout(r,400));
+    console.log('onright',await look());
+    await page.screenshot({path:'/tmp/aim_right.png'});
+    console.log(errs.filter(e=>!/ERR_FAILED/.test(e)).join('\n')||'no page errors');
+  }
   await browser.close();
 })();

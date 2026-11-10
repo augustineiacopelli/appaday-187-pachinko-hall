@@ -29,7 +29,6 @@ function setStream(s) {
     bs[i].classList.toggle('on', on);
     bs[i].setAttribute('aria-pressed', on ? 'true' : 'false');
   }
-  document.getElementById('aim').classList.toggle('on', s === 'R');
   if (VIEW) VIEW.aim.stream = s;
 }
 function powerFromEvent(e) {
@@ -83,7 +82,6 @@ function bindInput() {
   for (var i = 0; i < sb.length; i++) {
     sb[i].addEventListener('click', function (e) { setStream(e.currentTarget.getAttribute('data-stream')); });
   }
-  document.getElementById('aim').addEventListener('click', function () { setStream('R'); });
   dial.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setPower(IN.power - 0.04); }
     else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); setPower(IN.power + 0.04); }

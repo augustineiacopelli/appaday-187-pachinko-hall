@@ -210,8 +210,10 @@ function syncHud(force) {
   pill.className = 'pill ' + lb.cls;
   $('hud-spins').textContent = MACH.rec.spins;
   $('hud-since').textContent = MACH.rec.since;
-  var dem = MACH.aimDemand() && IN.stream !== 'R';
-  $('aim').classList.toggle('demand', dem);
+  /* the attacker only takes right stream shots, so the RIGHT button itself warns */
+  var dem = MACH.aimDemand() && IN.stream !== 'R', rb = $('stream').querySelector('[data-stream="R"]');
+  rb.classList.toggle('demand', dem);
+  rb.setAttribute('aria-label', dem ? 'Right stream, needed now for the attacker' : 'Right stream');
   if (MACH.rec.since >= 250) award('patience');
   if (STATE.tray >= 2000) award('heavy');
   var dry = STATE.tray <= 0 && WORLD.active() === 0;
@@ -390,7 +392,7 @@ function buildHelp() {
          'When the last reel stops dead on the matching symbol and holds, it has not decided yet: it either slips one place past you or slides home.</p>';
   }
   h += '<h3>Jackpot</h3><p>' + p.rounds + ' rounds of up to ' + p.balls + ' balls, ' + p.perBall + ' each.' +
-       (p.aim === 'right' ? ' The attacker only catches right stream shots, so flip the stream when the AIM lamp pulses.' : ' Any stream works while the feature is open.') + '</p>';
+       (p.aim === 'right' ? ' The attacker only catches right stream shots, so tap RIGHT while it pulses amber.' : ' Any stream works while the feature is open.') + '</p>';
   if (c.variant === 'senpuku') h += '<h3>Hidden mode</h3><p>About ' + Math.round(c.senpuku.p2R * 100) + ' percent of hits are a short 2R. Roughly half of those secretly switch on high odds for ' + 100 + ' spins. The machine looks normal, so read the history.</p>';
   if (c.variant === 'battle') h += '<h3>Duel</h3><p>After the rounds the LCD runs a duel. Win and you get kakuhen. Lose and you get jitan.</p>';
   if (c.variant === 'kenri') h += '<h3>Gates</h3><p>Pass the three gates in order, 1 then 2 then 3. A wrong gate resets the chain, and gate 1 starts it again. Completing it gives the right to a very likely hit on the next spin.</p>';

@@ -9,6 +9,8 @@ Seven pachinko cabinets trace the game from all mechanical bells and tulips to m
 
 Walk the hall and choose a seat. Each card shows the machine's data counter (spins since the last hit, with a short history of recent hits), a HOT lamp when odds are raised, and a difficulty meter. Inside a cabinet, hold the dial to fire balls. Turn the dial to set launch power and use LEFT and RIGHT to pick the stream. Balls that fall into the start pocket spin the reels. Jackpots open the attacker, tulips or wings, and every ball you catch pours into the tray.
 
+On the digi family cabinets the attacker only catches shots coming down the right side, so when a round opens the RIGHT button pulses amber until you switch to it, matching the arrow that appears on the board.
+
 ## The money
 
 This is the part most pachinko games skip. Balls are rented and belong to the hall, so a thousand yen note buys 250 of them on the four yen island or a thousand on the one yen island. A good run means you stop renting and play off your own tray. On the way out the counter tallies the tray, and then the three shop system does its work: four hundred balls make one special prize, a sliver of gold in a plastic case, which the hall is not allowed to buy back for cash, so you carry it to an unmarked window round the corner that pays fifteen hundred yen for it. Those four hundred balls cost sixteen hundred to rent. The gap is the whole business.
