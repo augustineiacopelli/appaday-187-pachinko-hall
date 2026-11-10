@@ -20,14 +20,23 @@ function evalSpin(cab, out, ctx) {
     else if (u[1] < o.reach) reach = 1 + (u[2] < o.superRate ? 1 : 0);
   }
   var a = Math.floor(u[4] * n) % n, b = (a + 1 + Math.floor(u[3] * (n - 1))) % n, c;
-  if (hit) syms = [a, a, a];
-  else if (reach) syms = [a, b, a];
-  else {
+  /* A slip is the near miss every hall knows: the last reel settles on the winning
+     symbol, holds, then creeps one place past it. A hitch is the same move on a win. */
+  var slip = false, hitch = false;
+  if (hit) {
+    syms = [a, a, a];
+    hitch = reach === 2 && u[7] < 0.65;
+  } else if (reach) {
+    slip = u[3] < 0.45;
+    if (slip) b = (a + 1) % n;
+    syms = [a, b, a];
+  } else {
     c = (b + 1 + Math.floor(u[7] * (n - 1))) % n;
     if (c === a) c = (c + 1) % n;
     syms = [a, b, c];
   }
-  return {hit: hit, reach: reach, syms: syms, usedKenri: usedKenri, rounds: 0, next: 'normal', duelWin: false};
+  return {hit: hit, reach: reach, syms: syms, slip: slip, hitch: hitch,
+    usedKenri: usedKenri, rounds: 0, next: 'normal', duelWin: false};
 }
 
 /* Fast forward past plays so each seat has a believable data counter on day one. */
@@ -64,7 +73,9 @@ function spinPlan(m, res) {
     else rd = fast ? 1.6 : 2.6;
     hold = fast ? 0.4 : 0.6;
   }
-  return {a: a, b: b, end: b + rd, hold: hold, dur: b + rd + hold};
+  /* a slip or a hitch needs room for the pause, so a plain reach is stretched a little */
+  if ((res.slip || res.hitch) && th === 'reel') rd += fast ? 0.5 : 0.9;
+  return {a: a, b: b, end: b + rd, hold: hold, dur: b + rd + hold, pause: !!(res.slip || res.hitch)};
 }
 
 function Machine(cab, rec, world) {

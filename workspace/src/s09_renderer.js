@@ -99,8 +99,9 @@ function RView(app, cab, world, machine, settings) {
   var L = this.L = {};
   var names = ['plastics', 'pins', 'features', 'balls', 'glow', 'lcd', 'fx', 'ui'];
   for (var i = 0; i < names.length; i++) { L[names[i]] = new PIXI.Container(); this.root.addChild(L[names[i]]); }
+  this.baseX = this.root.x; this.baseY = this.root.y; this.scale = 1;
   this.buildPlastics(); this.buildPins(); this.buildFeatures(); this.buildBalls(); this.buildGlow();
-  this.buildLcd(); this.buildFx(); this.buildUi();
+  this.buildLcd(); this.buildFx(); this.buildTray(); this.buildUi();
   this.applyEffects();
 }
 RView.prototype.applyEffects = function () {
@@ -168,10 +169,10 @@ RView.prototype.buildPlastics = function () {
   for (i = 0; i < cups.length; i++) g.roundRect(cups[i].x - cups[i].w / 2 - 2, cups[i].y - cups[i].h / 2 - 2, cups[i].w + 4, cups[i].h + 4, 3).fill(0x05070b);
   this.L.plastics.addChild(g);
   var lbl = new PIXI.Text({text: 'PLAY BALLS ONLY', style: {fontFamily: 'Chakra Petch, Arial, sans-serif', fontSize: 15, fontWeight: '700', fill: tr, letterSpacing: 3}});
-  lbl.anchor.set(0.5); lbl.alpha = 0.55; lbl.x = 190; lbl.y = P.OUT_Y + 56;
+  lbl.anchor.set(0.5); lbl.alpha = 0.55; lbl.x = 240; lbl.y = P.OUT_Y + 60;
   this.L.plastics.addChild(lbl);
   var nm = new PIXI.Text({text: cab.name.toUpperCase(), style: {fontFamily: 'Chakra Petch, Arial, sans-serif', fontSize: 12, fontWeight: '700', fill: pal.glow, letterSpacing: 2}});
-  nm.anchor.set(0.5); nm.alpha = 0.7; nm.x = 80; nm.y = P.OUT_Y + 28;
+  nm.anchor.set(0.5); nm.alpha = 0.7; nm.x = 50; nm.y = P.OUT_Y + 24; nm.scale.set(0.82);
   this.L.plastics.addChild(nm);
 };
 RView.prototype.buildPins = function () {
@@ -290,6 +291,7 @@ RView.prototype.buildLcd = function () {
   var c = this.lcd = new PIXI.Container();
   c.x = r.x; c.y = r.y; this.L.lcd.addChild(c);
   this.lcdBg = new PIXI.Graphics(); c.addChild(this.lcdBg);
+  this.auraG = new PIXI.Graphics(); c.addChild(this.auraG);
   this.compact = (th === 'drum' || th === 'seg');
   this.rw = this.compact ? (r.w - 16) / 3 : (r.w - 24) / 3;
   this.rh = this.compact ? r.h - 8 : 66;
@@ -311,6 +313,15 @@ RView.prototype.buildLcd = function () {
   c.addChild(this.duelG, this.holdG, this.gateG);
   if (!this.compact) c.addChild(this.tTop, this.tBot);
   c.addChild(this.tDuel);
+  this.cutBg = new PIXI.Graphics(); this.cutBg.visible = false;
+  this.cutBg.rect(0, this.ry + this.rh / 2 - 17, r.w, 34).fill({color: 0x05070b, alpha: 0.88});
+  this.cutBg.rect(0, this.ry + this.rh / 2 - 17, r.w, 2).fill(REACH_TINT[2]);
+  this.cutBg.rect(0, this.ry + this.rh / 2 + 15, r.w, 2).fill(REACH_TINT[2]);
+  c.addChild(this.cutBg);
+  this.tCut = new PIXI.Text({text: '', style: Object.assign({fontSize: 24, letterSpacing: 4, stroke: {color: 0x000000, width: 4}}, fs)});
+  this.tCut.anchor.set(0.5); this.tCut.x = r.w / 2; this.tCut.y = this.ry + this.rh / 2; this.tCut.visible = false;
+  c.addChild(this.tCut);
+  this.cutT = 0; this.cutKey = ''; this.auraLvl = -1; this.auraPaused = false;
   this.holdKey = '';
   /* hold lamps sit just under the panel on the compact themes */
   if (this.compact) { this.holdG.y = r.h + 11; }
@@ -336,6 +347,18 @@ RView.prototype.drawReel = function (i, symIdx, mode, glow) {
   drawSymbol(g, id, this.rw / 2, this.rh / 2, s, bgc, cream ? ({seven: 0xb3121f, bell: 0xc98a00, cherry: 0xb3122a, star: 0xc9a100, diamond: 0x0a7fa0, clover: 0x1c8a4a})[id] : (this.cab.lcd.theme === 'seg' ? pal.lcdFg : 0));
   g.roundRect(0, 0, this.rw, this.rh, 5).stroke({width: glow ? 3 : 1.5, color: glow ? pal.hot : pal.trim, alpha: glow ? 1 : 0.7});
 };
+/* How far the last reel has travelled, in symbols, at progress p through the reach.
+   Without a pause it simply decelerates. With one it eases to a single symbol short of
+   the target, stands dead still long enough to hurt, then creeps the last place. */
+function reelTravel(p, span, pause) {
+  if (!pause) return span * (1 - Math.pow(1 - p, 3));
+  var A = 0.72, B = 0.88, s1 = span - 1;
+  if (p <= A) return s1 * (1 - Math.pow(1 - p / A, 3));
+  if (p <= B) return s1;
+  var k = (p - B) / (1 - B);
+  return s1 + (1 - Math.pow(1 - k, 2));
+}
+var REACH_TINT = [0, 0x6ad8ff, 0xff4d5e];
 RView.prototype.updateLcd = function (dt) {
   var m = this.m, cab = this.cab, pal = this.pal, r = cab.lcd.rect, n = cab.lcd.symbols.length, t = this.t, i;
   var sp = m.spin, jp = m.jp, syms = m.lastSyms, top = '', bot = '', flash = false;
@@ -348,16 +371,23 @@ RView.prototype.updateLcd = function (dt) {
   } else if (sp) {
     var pl = sp.plan, st = sp.t, res = sp.res;
     var stopAt = [pl.a, pl.end, pl.b];
+    var live = res.reach && st >= pl.b && st < pl.end;
     for (i = 0; i < 3; i++) {
       var stopped = st >= stopAt[i];
-      var inReach = !stopped && i === 1 && res.reach && st >= pl.b;
-      if (stopped) this.drawReel(i, res.syms[i], 'stop', res.hit && st >= pl.end);
-      else {
-        var rate = inReach ? 5 : 18;
-        this.drawReel(i, Math.floor(st * rate + i * 3) % n, inReach ? 'reach' : 'spin', inReach && Math.floor(t * 8) % 2 === 0);
+      if (stopped) { this.drawReel(i, res.syms[i], 'stop', res.hit && st >= pl.end); continue; }
+      if (i === 1 && res.reach && st >= pl.b) {
+        /* the last reel: decelerate toward its symbol, with the pause if this spin has one */
+        var p0 = Math.floor(pl.b * 18 + 3) % n, T = res.syms[1];
+        var turns = res.reach === 2 ? 2 : 1;
+        var span = turns * n + (((T - p0) % n + n) % n);
+        var prog = clamp((st - pl.b) / Math.max(0.001, pl.end - pl.b), 0, 1);
+        var trav = reelTravel(prog, span, pl.pause);
+        this.drawReel(1, (p0 + Math.floor(trav)) % n, 'reach', Math.floor(t * (res.reach === 2 ? 14 : 8)) % 2 === 0);
+      } else {
+        this.drawReel(i, Math.floor(st * 18 + i * 3) % n, 'spin', false);
       }
     }
-    if (res.reach && st >= pl.b && st < pl.end) { top = res.reach === 2 ? 'SUPER REACH' : 'REACH'; flash = true; }
+    if (live) { top = res.reach === 2 ? 'SUPER REACH' : 'REACH'; flash = true; }
     else if (st >= pl.end) top = res.hit ? 'HIT' : 'MISS';
     bot = 'SPINNING';
   } else {
@@ -397,8 +427,44 @@ RView.prototype.updateLcd = function (dt) {
     this.tDuel.text = p < 1 ? 'VS' : (win ? 'WIN' : 'LOSE');
     setFill(this.tDuel, p < 1 ? pal.lcdFg : (win ? 0x4de08a : 0xff4d5e));
   }
-  var base = 0.22 + (jp ? 0.25 + 0.15 * Math.sin(t * 10) : 0) + (sp && sp.res.reach ? 0.12 : 0);
+  /* reach aura: white to cyan to red, and the rarer the colour the better the spin */
+  var lvl = 0, paused = false, prg = 0;
+  if (sp && sp.res.reach && sp.t >= sp.plan.b && sp.t < sp.plan.end) {
+    lvl = sp.res.reach;
+    prg = clamp((sp.t - sp.plan.b) / Math.max(0.001, sp.plan.end - sp.plan.b), 0, 1);
+    paused = sp.plan.pause && prg > 0.72 && prg < 0.88;
+  }
+  var ag = this.auraG;
+  if (lvl !== this.auraLvl || paused !== this.auraPaused) {
+    this.auraLvl = lvl; this.auraPaused = paused;
+    ag.clear();
+    if (lvl) {
+      var tint = paused ? 0xffffff : REACH_TINT[lvl];
+      ag.roundRect(2, 2, r.w - 4, r.h - 4, 8).stroke({width: paused ? 5 : 3, color: tint, alpha: 0.95});
+      ag.roundRect(6, 6, r.w - 12, r.h - 12, 6).stroke({width: 1, color: tint, alpha: 0.4});
+    }
+  }
+  ag.alpha = lvl ? (paused ? 1 : 0.45 + 0.4 * Math.sin(t * (lvl === 2 ? 16 : 9))) : 0;
+  /* the cut in that announces a super reach, and the shake that rides with it */
+  var ck = lvl === 2 ? (sp.plan.b + '|' + sp.res.syms.join(',')) : '';
+  if (ck && ck !== this.cutKey) { this.cutKey = ck; this.cutT = 0.9; Sfx.stinger(); }
+  if (!ck) this.cutKey = '';
+  if (this.cutT > 0) {
+    this.cutT -= dt;
+    this.tCut.visible = true; this.cutBg.visible = true;
+    this.cutBg.alpha = clamp(this.cutT * 2.2, 0, 1);
+    this.tCut.text = 'CHANCE';
+    this.tCut.alpha = clamp(this.cutT * 2.2, 0, 1);
+    this.tCut.scale.set(1 + (1 - clamp(this.cutT / 0.9, 0, 1)) * 0.5);
+    setFill(this.tCut, REACH_TINT[2]);
+  } else { this.tCut.visible = false; this.cutBg.visible = false; }
+  if (!this.settings.reduced) {
+    if (paused) this.shake = Math.max(this.shake, 1.6);
+    else if (lvl === 2 && prg > 0.5) this.shake = Math.max(this.shake, 0.7);
+  }
+  var base = 0.22 + (jp ? 0.25 + 0.15 * Math.sin(t * 10) : 0) + (lvl ? 0.1 + 0.08 * lvl : 0);
   this.glowLcd.alpha = base;
+  if (lvl) this.glowLcd.tint = REACH_TINT[lvl]; else this.glowLcd.tint = pal.glow;
 };
 RView.prototype.buildFx = function () {
   this.parts = [];
@@ -416,6 +482,94 @@ RView.prototype.buildFx = function () {
     this.pops.push({t: tx, life: 0, on: false});
   }
   this.startFlash = 0; this.shake = 0; this.flashAmt = 0;
+  /* the shower: balls arcing out of the machine and into the tray */
+  this.cas = [];
+  if (!this.cab.ballless) {
+    for (var c = 0; c < 36; c++) {
+      var cs = new PIXI.Sprite(Tex.ball);
+      cs.anchor.set(0.5); cs.visible = false;
+      this.L.fx.addChild(cs);
+      this.cas.push({s: cs, x0: 0, y0: 0, x1: 0, vy: 0, life: 0, max: 1, on: false});
+    }
+  }
+};
+RView.prototype.buildTray = function () {
+  this.trayG = new PIXI.Graphics();
+  this.pileG = new PIXI.Graphics();
+  this.L.features.addChild(this.trayG, this.pileG);
+  this.trayCount = 0; this.pileKey = -1; this.pileBump = 0;
+  var pal = this.pal, g = this.trayG;
+  if (this.cab.ballless) {
+    /* a smart cabinet has no tray at all, only a counter where one used to be */
+    g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 8).fill({color: 0x0a0c10, alpha: 0.92});
+    g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 8).stroke({width: 2, color: pal.trim, alpha: 0.5});
+    this.tCredit = new PIXI.Text({text: '0', style: {fontFamily: 'Orbitron, Chakra Petch, Arial, sans-serif', fontSize: 24, fontWeight: '800', fill: pal.hot, letterSpacing: 3}});
+    this.tCredit.anchor.set(0.5); this.tCredit.x = TRAY.x + TRAY.w / 2; this.tCredit.y = TRAY.y + TRAY.h / 2 + 1;
+    this.L.features.addChild(this.tCredit);
+    this.tCreditLbl = new PIXI.Text({text: 'HELD BALLS', style: {fontFamily: 'Chakra Petch, Arial, sans-serif', fontSize: 9, fontWeight: '700', fill: pal.trim, letterSpacing: 3}});
+    this.tCreditLbl.anchor.set(0.5); this.tCreditLbl.x = TRAY.x + 58; this.tCreditLbl.y = TRAY.y + 9;
+    this.L.features.addChild(this.tCreditLbl);
+    return;
+  }
+  g.roundRect(TRAY.x - 4, TRAY.y - 4, TRAY.w + 8, TRAY.h + 8, 10).fill(pal.frame);
+  g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 7).fill(0x05070b);
+  g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 7).stroke({width: 2, color: pal.trim, alpha: 0.55});
+  g.moveTo(TRAY.x + 10, TRAY.y + TRAY.h).lineTo(TRAY.x + TRAY.w - 10, TRAY.y + TRAY.h).stroke({width: 2, color: pal.glow, alpha: 0.2});
+};
+/* The pile is drawn as rows of balls so a full tray reads as metal, not as a bar. */
+RView.prototype.updatePile = function (dt) {
+  if (this.cab.ballless) {
+    if (this.tCredit && this.pileKey !== this.trayCount) {
+      this.pileKey = this.trayCount;
+      this.tCredit.text = String(this.trayCount);
+    }
+    if (this.tCredit) this.tCredit.alpha = 0.75 + 0.25 * Math.sin(this.t * 3);
+    return;
+  }
+  if (this.pileBump > 0) this.pileBump -= dt * 2;
+  var fill = clamp(this.trayCount / 2400, 0, 1);
+  var rows = Math.round(fill * 4 * 10) / 10, key = Math.round(rows * 10);
+  if (key === this.pileKey) return;
+  this.pileKey = key;
+  var g = this.pileG, pal = this.pal, r, i, full = Math.floor(rows), part = rows - full;
+  g.clear();
+  for (r = 0; r < 4; r++) {
+    var amt = r < full ? 1 : (r === full ? part : 0);
+    if (amt <= 0) break;
+    var y = TRAY.y + TRAY.h - 7 - r * 8.5, cols = Math.floor((TRAY.w - 14) / 10);
+    for (i = 0; i < Math.round(cols * amt); i++) {
+      g.circle(TRAY.x + 10 + i * 10 + (r % 2) * 4, y, 4.4).fill({color: 0xc8d2e0, alpha: 0.95});
+      g.circle(TRAY.x + 8.6 + i * 10 + (r % 2) * 4, y - 1.4, 1.5).fill({color: 0xffffff, alpha: 0.7});
+    }
+  }
+};
+RView.prototype.cascade = function (x, y, n) {
+  if (this.cab.ballless || this.settings.reduced) return;
+  var want = Math.min(n, 6), k = 0;
+  for (var i = 0; i < this.cas.length && k < want; i++) {
+    var p = this.cas[i];
+    if (p.on) continue;
+    p.on = true; p.life = 0; p.max = 0.45 + Math.random() * 0.25;
+    p.x0 = x; p.y0 = y;
+    p.x1 = TRAY.x + 14 + Math.random() * (TRAY.w - 28);
+    p.s.visible = true; p.s.x = x; p.s.y = y; p.s.scale.set(1);
+    k++;
+  }
+};
+RView.prototype.updateCascade = function (dt) {
+  var landed = 0;
+  for (var i = 0; i < this.cas.length; i++) {
+    var p = this.cas[i];
+    if (!p.on) continue;
+    p.life += dt;
+    var u = p.life / p.max;
+    if (u >= 1) { p.on = false; p.s.visible = false; landed++; continue; }
+    /* a flat arc out of the machine, then a drop into the tray */
+    p.s.x = lerp(p.x0, p.x1, u);
+    p.s.y = lerp(p.y0, TRAY.y + 6, u * u) - Math.sin(u * Math.PI) * 26;
+    p.s.alpha = u > 0.85 ? (1 - u) / 0.15 : 1;
+  }
+  if (landed) { this.pileBump = 1; Sfx.pin(400); }
 };
 RView.prototype.burst = function (x, y, color, n, spd) {
   if (this.settings.reduced) n = Math.ceil(n / 3);
@@ -513,6 +667,7 @@ RView.prototype.layout = function (w, h) {
   this.root.scale.set(s);
   this.root.x = Math.round((w - PHYS.W * s) / 2);
   this.scale = s;
+  this.baseX = this.root.x; this.baseY = this.root.y;
 };
 RView.prototype.update = function (dt) {
   this.t += dt;
@@ -525,7 +680,18 @@ RView.prototype.update = function (dt) {
   this.updateFeatures();
   this.updateLcd(dt);
   this.updateFx(dt);
+  this.updateCascade(dt);
+  this.updatePile(dt);
   this.updateUi(dt);
+  /* screen shake, applied to the board root and nothing else */
+  if (this.shake > 0) {
+    this.shake = Math.max(0, this.shake - dt * 3.2);
+    var k = this.shake * this.scale * 2.2;
+    this.root.x = this.baseX + (Math.random() - 0.5) * k;
+    this.root.y = this.baseY + (Math.random() - 0.5) * k;
+  } else if (this.root.x !== this.baseX || this.root.y !== this.baseY) {
+    this.root.x = this.baseX; this.root.y = this.baseY;
+  }
 };
 RView.prototype.destroy = function () {
   if (this.root.parent) this.root.parent.removeChild(this.root);

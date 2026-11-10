@@ -8,7 +8,13 @@ function freshRecord(cab) {
   return rec;
 }
 function defaultState() {
-  var s = {version: APP.version, bank: 500, settings: {sound: true, reduced: reducedDefault()}, cabs: {}};
+  var s = {
+    version: APP.version,
+    wallet: ECON.startYen - ECON.bill, tray: Math.floor(ECON.bill / 4), stored: 0, rate: 4,
+    spent: ECON.bill, cashed: 0, best: 0,
+    prizes: [], plaques: [], seen: [],
+    settings: {sound: true, reduced: reducedDefault()}, cabs: {}
+  };
   for (var i = 0; i < CABS.length; i++) s.cabs[CABS[i].id] = freshRecord(CABS[i]);
   return s;
 }
@@ -18,15 +24,43 @@ function intOr(v, d, lo, hi) {
   v = Math.floor(v);
   return v < lo ? lo : (v > hi ? hi : v);
 }
+/* keep only ids the build still knows about, and never more than the list holds */
+function idList(raw, allowed) {
+  var out = [], i, j;
+  if (!Array.isArray(raw)) return out;
+  for (i = 0; i < raw.length && out.length < allowed.length; i++) {
+    for (j = 0; j < allowed.length; j++) {
+      if (raw[i] === allowed[j] && out.indexOf(raw[i]) < 0) { out.push(raw[i]); break; }
+    }
+  }
+  return out;
+}
 function sanitizeState(o) {
-  var d = defaultState();
+  var d = defaultState(), i;
   if (!o || typeof o !== 'object' || o.version !== APP.version) return d;
-  var s = {version: APP.version, bank: intOr(o.bank, d.bank, 0, 99999999), settings: {sound: true, reduced: d.settings.reduced}, cabs: {}};
+  var prizeIds = [], plaqueIds = [], cabIds = [];
+  for (i = 0; i < PRIZES.length; i++) prizeIds.push(PRIZES[i].id);
+  for (i = 0; i < PLAQUES.length; i++) plaqueIds.push(PLAQUES[i].id);
+  for (i = 0; i < CABS.length; i++) cabIds.push(CABS[i].id);
+  var s = {
+    version: APP.version,
+    wallet: intOr(o.wallet, d.wallet, 0, 99999999),
+    tray: intOr(o.tray, d.tray, 0, ECON.trayCap),
+    stored: intOr(o.stored, 0, 0, 99999999),
+    rate: (Number(o.rate) === 1) ? 1 : 4,
+    spent: intOr(o.spent, 0, 0, 99999999),
+    cashed: intOr(o.cashed, 0, 0, 99999999),
+    best: intOr(o.best, 0, 0, 99999999),
+    prizes: idList(o.prizes, prizeIds),
+    plaques: idList(o.plaques, plaqueIds),
+    seen: idList(o.seen, cabIds),
+    settings: {sound: true, reduced: d.settings.reduced}, cabs: {}
+  };
   if (o.settings && typeof o.settings === 'object') {
     if (typeof o.settings.sound === 'boolean') s.settings.sound = o.settings.sound;
     if (typeof o.settings.reduced === 'boolean') s.settings.reduced = o.settings.reduced;
   }
-  for (var i = 0; i < CABS.length; i++) {
+  for (i = 0; i < CABS.length; i++) {
     var id = CABS[i].id, r = o.cabs && o.cabs[id], rec;
     if (!r || typeof r !== 'object') { s.cabs[id] = d.cabs[id]; continue; }
     rec = {

@@ -147,7 +147,7 @@ var CABS = [];
     geo: {seed: 31, keep: digiKeep(), arm: [170, 468]}, nudge: [{x: 214, y: 556, dx: 1, dy: 0}, {x: 266, y: 556, dx: -1, dy: 0}],
     feat: digiFeat({}),
     odds: {base: 0.0145, kaku: 0.10, jitan: 0.0145, reach: 0.20, superRate: 0.30, superHit: 0.6, kakuRate: 0.5},
-    payout: {rounds: 5, balls: 8, perBall: 8, roundTime: 16, aim: 'right', startPay: 4, tulipPay: 8},
+    payout: {rounds: 5, balls: 8, perBall: 6, roundTime: 16, aim: 'right', startPay: 4, tulipPay: 8},
     difficulty: 3,
     tip: 'After a hit the HOT lamp means high odds. During rounds the attacker only takes right shots.',
     blurb: 'The modern layout: LCD reels, reach, super reach, kakuhen and jitan, and a right side attacker.'
@@ -183,7 +183,7 @@ var CABS = [];
     feat: digiFeat({fans: fans}),
     odds: {base: 0.014, kaku: 0.10, jitan: 0.014, reach: 0.25, superRate: 0.4, superHit: 0.6, kakuRate: 0.5},
     duel: {win: 0.5},
-    payout: {rounds: 4, balls: 10, perBall: 8, roundTime: 15, aim: 'right', startPay: 4, tulipPay: 8},
+    payout: {rounds: 4, balls: 10, perBall: 6, roundTime: 15, aim: 'right', startPay: 4, tulipPay: 8},
     difficulty: 4,
     tip: 'The duel after the rounds decides what comes next. Win for kakuhen, lose for jitan.',
     blurb: 'Reach turns into a duel on the LCD. Two windmills keep the field lively.'
@@ -209,6 +209,25 @@ var CABS = [];
     blurb: 'Completing the gate chain earns the right to a jackpot on the very next spin.'
   });
   c.lcd.symbols = ['seven', 'crown', 'diamond', 'star', 'moon', 'bell'];
+  CABS.push(c);
+})();
+
+/* 7. smart: the 2023 ball-less cabinet. Balls still rattle inside, but nothing is paid
+   out into a tray; the unit just counts. Rarer hits, far longer rushes. */
+(function () {
+  var c = mergeCab(digiBase(), {
+    id: 'smart', name: 'Smart Rush', era: '2023', variant: 'smart', seed: 0x7A8B9CA7, pre: 418,
+    palette: 'smart', phys: {rest: 0.40, wallRest: 0.32, fric: 0.16, grav: 1},
+    geo: {seed: 89, keep: digiKeep(), arm: [180, 472]}, nudge: [{x: 214, y: 556, dx: 1, dy: 0}, {x: 266, y: 556, dx: -2, dy: 0}],
+    feat: digiFeat({}),
+    odds: {base: 0.0065, kaku: 0.055, jitan: 0.0065, reach: 0.26, superRate: 0.38, superHit: 0.7, kakuRate: 0.78},
+    payout: {rounds: 7, balls: 8, perBall: 9, roundTime: 15, aim: 'right', startPay: 3, tulipPay: 8},
+    ballless: true,
+    difficulty: 5,
+    tip: 'Hits are rare and the rush is long. Nothing drops into a tray; the unit just counts.',
+    blurb: 'The 2023 cabinet that never pays a ball into your hands. Hard to start, and a rush that keeps going.'
+  });
+  c.lcd.symbols = ['seven', 'star', 'crown', 'diamond', 'moon', 'bell', 'clover'];
   CABS.push(c);
 })();
 

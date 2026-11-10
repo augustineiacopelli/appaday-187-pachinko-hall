@@ -12,7 +12,7 @@
 <script src="https://augustineiacopelli.github.io/appaday/save.js" defer></script>
 <title>Pachinko Hall | AppADay 187</title>
 <meta name="theme-color" content="#070b12">
-<meta name="description" content="Six pachinko cabinets from mechanical tulips to digital reels. Seeded odds, custom ball physics, play balls only, no money.">
+<meta name="description" content="Seven pachinko cabinets from 1962 tulips to the ball-less smart machine. Rent balls, read the counters, exchange at the window. Seeded odds, custom physics.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
@@ -101,7 +101,53 @@ body.nopixi .screen{display:none!important}
 #dial-val{fill:none;stroke:var(--amber);stroke-width:6;stroke-linecap:round}
 #dial-thumb{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dfe8f7,#7e8da6 60%,#39465c);border:2px solid #0a101c;box-shadow:0 2px 8px rgba(0,0,0,.6);pointer-events:none}
 #dial-read{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:Orbitron,monospace;font-weight:800;font-size:.85rem;color:#fff;pointer-events:none;text-shadow:0 1px 3px #000;z-index:2}
-#refill{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:6;box-shadow:0 0 0 3px rgba(255,255,255,.15),0 10px 30px rgba(0,0,0,.6)}
+#rent-wrap{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:8px;width:min(92%,21rem);padding:16px 14px;background:rgba(10,15,25,.95);border:1px solid var(--acc);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.7);text-align:center}
+.rent-head{font-size:.68rem;letter-spacing:.18em;color:var(--mut)}
+.rent-note{font-size:.76rem;color:var(--mut);line-height:1.35}
+#rent-wrap .btn{width:100%}
+/* hall economy strip */
+.hallbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:7px calc(10px + var(--sr)) 7px calc(10px + var(--sl));background:#0a1120;border-bottom:1px solid var(--line)}
+.hb-stat{display:flex;flex-direction:column;gap:2px;padding-right:6px;min-width:3.6rem}
+.hb-stat b{font-family:Orbitron,monospace;font-size:.95rem;line-height:1.1}
+.hb-stat b.amber{color:var(--amber)}
+.hb-btn{flex:1 1 auto;min-height:44px;padding:0 10px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-weight:700;font-size:.78rem;letter-spacing:.06em;white-space:nowrap}
+.hb-btn.go{border-color:var(--acc);color:var(--acc2)}
+.hb-btn:active{background:var(--acc);color:#fff}
+/* counter and case */
+.cnt-lead{color:var(--mut)!important;font-size:.86rem!important}
+.jet{display:flex;flex-direction:column;align-items:center;gap:4px;margin:10px 0 14px;padding:14px 10px;background:#05080e;border:1px solid var(--line);border-radius:12px}
+.jet b{font-family:Orbitron,monospace;font-weight:800;font-size:clamp(2rem,11vw,2.8rem);color:var(--amber);text-shadow:0 0 14px rgba(255,179,71,.5);line-height:1}
+.jet.small{margin:4px 0 10px;padding:8px}
+.jet.small b{font-size:1.5rem}
+.jet.pay b{color:#4de08a;text-shadow:0 0 14px rgba(77,224,138,.5)}
+.shelf{display:grid;grid-template-columns:1fr;gap:6px;margin:6px 0}
+.prz{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:46px;padding:0 12px;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-size:.88rem;font-weight:700}
+.prz[disabled]{opacity:.45;cursor:default}
+.prz.have{border-color:#4de08a;opacity:1}
+.prz.have .prz-cost{color:#4de08a}
+.prz.locked{opacity:.4}
+.prz-cost{font-family:Orbitron,monospace;font-size:.72rem;color:var(--mut);white-space:nowrap}
+.plaques{display:grid;grid-template-columns:1fr;gap:6px;margin:6px 0}
+.plq{padding:8px 12px;background:#0b1220;border:1px solid var(--line);border-left:4px solid #2a3140;border-radius:10px;opacity:.45}
+.plq.have{opacity:1;border-left-color:var(--amber)}
+.plq b{display:block;font-size:.92rem}
+.plq span{font-size:.78rem;color:var(--mut)}
+.stat-row{display:flex;gap:8px;margin:8px 0 4px}
+.stat-row span{flex:1;display:flex;flex-direction:column;gap:2px;padding:8px;background:#0b1220;border:1px solid var(--line);border-radius:10px;font-size:.6rem;letter-spacing:.14em;color:var(--mut)}
+.stat-row b{font-family:Orbitron,monospace;font-size:.86rem;color:var(--ink);letter-spacing:0}
+.stat-row b.up{color:#4de08a}
+.stat-row b.down{color:#ff8a98}
+.walk{display:flex;align-items:center;gap:6px;margin:4px 0 12px}
+.w-step{flex:1;text-align:center;font-size:.68rem;letter-spacing:.08em;padding:7px 2px;border:1px solid var(--line);border-radius:8px;color:var(--mut)}
+.w-step.on{border-color:var(--acc);color:var(--acc2)}
+.w-dash{width:10px;height:2px;background:var(--line);flex:none}
+.cnt-row{display:flex;flex-direction:column}
+#toast{position:absolute;left:50%;top:calc(10px + var(--st));transform:translate(-50%,-140%);z-index:70;width:min(92vw,22rem);padding:10px 14px;background:linear-gradient(160deg,#1d2740,#121a2b);border:1px solid var(--amber);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.6);transition:transform .35s ease;pointer-events:none}
+#toast.show{transform:translate(-50%,0)}
+#toast .t-lbl{display:block;font-size:.58rem;letter-spacing:.2em;color:var(--amber)}
+#toast b{display:block;font-size:1rem;letter-spacing:.03em}
+#toast .t-note{display:block;font-size:.75rem;color:var(--mut)}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
 /* overlays */
 .overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(3,6,12,.78);z-index:50;padding:calc(12px + var(--st)) 12px calc(12px + var(--sb))}
 .overlay.open{display:flex}
@@ -126,9 +172,15 @@ body.nopixi .screen{display:none!important}
     <header class="bar">
       <a class="portal" href="https://augustineiacopelli.github.io/appaday/" aria-label="AppADay portfolio">AppADay</a>
       <div class="title"><h1>Pachinko Hall</h1><span class="sub">APPADAY 187</span></div>
-      <div class="bankbox"><span class="lbl">BALLS</span><b id="bank-hall">0</b></div>
       <button id="gear-hall" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></button>
     </header>
+    <div class="hallbar">
+      <span class="hb-stat"><span class="lbl">WALLET</span><b id="wallet-hall">0</b></span>
+      <span class="hb-stat"><span class="lbl">TRAY</span><b id="tray-hall" class="amber">0</b></span>
+      <button type="button" id="rate-btn" class="hb-btn">4 YEN</button>
+      <button type="button" id="counter-btn" class="hb-btn go">Counter</button>
+      <button type="button" id="case-btn" class="hb-btn">Case</button>
+    </div>
     <div class="scroll">
       <div id="seat-grid"></div>
       <footer class="foot">
@@ -141,14 +193,18 @@ body.nopixi .screen{display:none!important}
     <div id="hud">
       <button id="btn-back" class="icon-btn" aria-label="Back to the hall"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div id="hud-name" class="hud-name"></div>
-      <div class="hud-bank"><span class="lbl">BALLS</span><b id="hud-bank">0</b></div>
+      <div class="hud-bank"><span class="lbl">TRAY</span><b id="hud-bank">0</b></div>
       <button id="btn-help" class="icon-btn" aria-label="Help for this cabinet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.8.5-1.1 1-1.1 1.8M12 17h.01"/></svg></button>
       <button id="btn-gear" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></button>
       <div class="hud-row"><span id="hud-mode" class="pill normal">NORMAL</span><span>SPINS <b id="hud-spins">0</b></span><span>SINCE <b id="hud-since">0</b></span></div>
     </div>
     <div id="stage">
       <div id="pixi-host"></div>
-      <button id="refill" class="btn" hidden>Out of balls. Borrow 200</button>
+      <div id="rent-wrap" hidden>
+        <span class="rent-head">The tray is empty</span>
+        <button type="button" id="rent-btn" class="btn">Insert 1,000</button>
+        <span id="rent-note" class="rent-note"></span>
+      </div>
       <div id="controls">
         <div id="stream" role="group" aria-label="Launch stream">
           <button type="button" data-stream="L" class="on" aria-pressed="true" aria-label="Left stream">LEFT</button>
@@ -175,6 +231,16 @@ body.nopixi .screen{display:none!important}
   <div id="help-sheet" class="overlay" role="dialog" aria-modal="true" aria-labelledby="help-title">
     <div class="sheet" id="help-body"></div>
   </div>
+  <div id="counter-sheet" class="overlay" role="dialog" aria-modal="true" aria-labelledby="cnt-title">
+    <div class="sheet">
+      <h2 id="cnt-title">Ball counter</h2>
+      <div id="cnt-body"></div>
+    </div>
+  </div>
+  <div id="case-sheet" class="overlay" role="dialog" aria-modal="true" aria-labelledby="case-title">
+    <div class="sheet" id="case-body"></div>
+  </div>
+  <div id="toast" aria-hidden="true"></div>
   <div id="cdn-error" class="overlay" role="alertdialog" aria-modal="true">
     <div class="sheet"><h2>The renderer did not load</h2><p>PixiJS could not be fetched. Check your connection and reload the page.</p></div>
   </div>
@@ -183,7 +249,7 @@ body.nopixi .screen{display:none!important}
 <script>
 /* ===== SECTION 1: CONSTANTS ===== */
 'use strict';
-var APP = {id: 187, slug: 'pachinko-hall', title: 'Pachinko Hall', key: 'appaday.187.state', version: 1};
+var APP = {id: 187, slug: 'pachinko-hall', title: 'Pachinko Hall', key: 'appaday.187.state', version: 2};
 var ACCENT = '#276EB7';
 var ACCENT_N = 0x276EB7;
 var PHYS = {
@@ -196,6 +262,8 @@ PHYS.SUB_DT = PHYS.DT / PHYS.SUBSTEPS;
 /* per substep travel stays under 0.8 of the pin radius, so a ball cannot skip across a pin */
 PHYS.VMAX = 0.8 * PHYS.PIN_R / PHYS.SUB_DT;
 var MAX_BALLS = PHYS.MAX_BALLS;
+/* the upper tray, kept inside the band that stays visible when a short screen crops the board */
+var TRAY = {x: 96, y: 660, w: 326, h: 36};
 
 /* rail paths and launch tuning for the two streams (world units) */
 var STREAMS = {
@@ -209,8 +277,61 @@ var PALETTES = {
   digi:    {plate: 0x2a1e5c, plate2: 0x1c1442, frame: 0x0e0b20, trim: 0x7fe8ff, glow: 0x59d8ff, lcdBg: 0x07051a, lcdFg: 0xe9f6ff, hot: 0xff6bd6},
   senpuku: {plate: 0x0f3d2e, plate2: 0x0a2a20, frame: 0x08130f, trim: 0xd9b862, glow: 0x7affc1, lcdBg: 0x04120d, lcdFg: 0xe6f5d6, hot: 0xd9ff8a},
   battle:  {plate: 0x5c1224, plate2: 0x3d0b18, frame: 0x14090d, trim: 0xb9c2d0, glow: 0xff5a6e, lcdBg: 0x12060a, lcdFg: 0xffe3e6, hot: 0xff9d5c},
-  kenri:   {plate: 0x13284f, plate2: 0x0c1a36, frame: 0x090f1d, trim: 0xc8d3e8, glow: 0x6aa9ff, lcdBg: 0x050b18, lcdFg: 0xdbe8ff, hot: 0xffd166}
+  kenri:   {plate: 0x13284f, plate2: 0x0c1a36, frame: 0x090f1d, trim: 0xc8d3e8, glow: 0x6aa9ff, lcdBg: 0x050b18, lcdFg: 0xdbe8ff, hot: 0xffd166},
+  smart:   {plate: 0x15171c, plate2: 0x0d0f13, frame: 0x050608, trim: 0xe8eef7, glow: 0x00e5d0, lcdBg: 0x000a0c, lcdFg: 0xd8fffb, hot: 0x00ffd5}
 };
+
+/* ---- the parlour economy ----
+   Balls are rented, never bought: they belong to the hall. A good run means you stop
+   renting and play off the tray. On the way out the counter tallies the tray and the
+   three shop system turns the surplus into cash without the hall ever paying it. */
+var ECON = {
+  startYen: 10000,
+  rates: [4, 1],              /* yen per ball, the two island rates */
+  bill: 1000,                 /* one note at a time, as the card reader takes it */
+  lend: 3000,                 /* the hall stakes you when the wallet is empty */
+  specialBalls: 400,          /* balls per special prize at the 4 yen rate */
+  specialYen: 1500,           /* what the window off the premises pays for one */
+  trayCap: 99999
+};
+/* 400 balls cost 1600 yen to rent and come back as 1500. That gap is the whole business. */
+ECON.exchangeYen = function (balls, rate) {
+  return Math.floor(balls / ECON.specialBalls) * Math.round(ECON.specialYen * rate / 4);
+};
+
+/* general prizes: the shelf behind the counter, taken home rather than cashed */
+var PRIZES = [
+  {id: 'caramel', name: 'Box of caramels', cost: 50, icon: 'box'},
+  {id: 'pen', name: 'Ballpoint pen', cost: 90, icon: 'pen'},
+  {id: 'lighter', name: 'Cigarette lighter', cost: 150, icon: 'flame'},
+  {id: 'senbei', name: 'Tin of rice crackers', cost: 260, icon: 'disc'},
+  {id: 'ramen', name: 'Case of instant ramen', cost: 420, icon: 'bowl'},
+  {id: 'bear', name: 'Plush bear', cost: 700, icon: 'bear'},
+  {id: 'clock', name: 'Wall clock', cost: 1200, icon: 'clock'},
+  {id: 'kettle', name: 'Electric kettle', cost: 2000, icon: 'kettle'},
+  {id: 'cooker', name: 'Rice cooker', cost: 3500, icon: 'cooker'},
+  {id: 'handheld', name: 'Handheld console', cost: 6000, icon: 'console'},
+  {id: 'tv', name: 'Flat screen television', cost: 12000, icon: 'tv'},
+  {id: 'bar', name: 'Cased gold bar', cost: 25000, icon: 'bar'}
+];
+
+/* commemorative plaques: the wall by the door */
+var PLAQUES = [
+  {id: 'firstspin', name: 'First Handle', note: 'Spin a machine for the first time.'},
+  {id: 'firsthit', name: 'First Blood', note: 'Land your first jackpot.'},
+  {id: 'kakuhen', name: 'Probability Change', note: 'Reach kakuhen.'},
+  {id: 'streak', name: 'On a Run', note: 'Three jackpots without leaving the seat.'},
+  {id: 'slip', name: 'One Off', note: 'Survive a reach that lands one symbol short.'},
+  {id: 'gates', name: 'Gatekeeper', note: 'Complete the Kenrimono chain.'},
+  {id: 'duel', name: 'Duelist', note: 'Win a Battle Duel.'},
+  {id: 'hidden', name: 'Hidden Truth', note: 'Hit while Senpuku is secretly running hot.'},
+  {id: 'patience', name: 'Long Sit', note: 'Pass 250 spins on one machine without a hit.'},
+  {id: 'tour', name: 'Grand Tour', note: 'Play every cabinet in the hall.'},
+  {id: 'heavy', name: 'Heavy Tray', note: 'Hold 2,000 balls at once.'},
+  {id: 'cashout', name: 'Around the Corner', note: 'Take a special prize to the window.'},
+  {id: 'collector', name: 'Shelf Raider', note: 'Claim six different prizes.'},
+  {id: 'whale', name: 'Cased in Gold', note: 'Claim the top prize on the shelf.'}
+];
 
 function hex6(n) {
   var s = (n >>> 0).toString(16);
@@ -261,7 +382,13 @@ function freshRecord(cab) {
   return rec;
 }
 function defaultState() {
-  var s = {version: APP.version, bank: 500, settings: {sound: true, reduced: reducedDefault()}, cabs: {}};
+  var s = {
+    version: APP.version,
+    wallet: ECON.startYen - ECON.bill, tray: Math.floor(ECON.bill / 4), stored: 0, rate: 4,
+    spent: ECON.bill, cashed: 0, best: 0,
+    prizes: [], plaques: [], seen: [],
+    settings: {sound: true, reduced: reducedDefault()}, cabs: {}
+  };
   for (var i = 0; i < CABS.length; i++) s.cabs[CABS[i].id] = freshRecord(CABS[i]);
   return s;
 }
@@ -271,15 +398,43 @@ function intOr(v, d, lo, hi) {
   v = Math.floor(v);
   return v < lo ? lo : (v > hi ? hi : v);
 }
+/* keep only ids the build still knows about, and never more than the list holds */
+function idList(raw, allowed) {
+  var out = [], i, j;
+  if (!Array.isArray(raw)) return out;
+  for (i = 0; i < raw.length && out.length < allowed.length; i++) {
+    for (j = 0; j < allowed.length; j++) {
+      if (raw[i] === allowed[j] && out.indexOf(raw[i]) < 0) { out.push(raw[i]); break; }
+    }
+  }
+  return out;
+}
 function sanitizeState(o) {
-  var d = defaultState();
+  var d = defaultState(), i;
   if (!o || typeof o !== 'object' || o.version !== APP.version) return d;
-  var s = {version: APP.version, bank: intOr(o.bank, d.bank, 0, 99999999), settings: {sound: true, reduced: d.settings.reduced}, cabs: {}};
+  var prizeIds = [], plaqueIds = [], cabIds = [];
+  for (i = 0; i < PRIZES.length; i++) prizeIds.push(PRIZES[i].id);
+  for (i = 0; i < PLAQUES.length; i++) plaqueIds.push(PLAQUES[i].id);
+  for (i = 0; i < CABS.length; i++) cabIds.push(CABS[i].id);
+  var s = {
+    version: APP.version,
+    wallet: intOr(o.wallet, d.wallet, 0, 99999999),
+    tray: intOr(o.tray, d.tray, 0, ECON.trayCap),
+    stored: intOr(o.stored, 0, 0, 99999999),
+    rate: (Number(o.rate) === 1) ? 1 : 4,
+    spent: intOr(o.spent, 0, 0, 99999999),
+    cashed: intOr(o.cashed, 0, 0, 99999999),
+    best: intOr(o.best, 0, 0, 99999999),
+    prizes: idList(o.prizes, prizeIds),
+    plaques: idList(o.plaques, plaqueIds),
+    seen: idList(o.seen, cabIds),
+    settings: {sound: true, reduced: d.settings.reduced}, cabs: {}
+  };
   if (o.settings && typeof o.settings === 'object') {
     if (typeof o.settings.sound === 'boolean') s.settings.sound = o.settings.sound;
     if (typeof o.settings.reduced === 'boolean') s.settings.reduced = o.settings.reduced;
   }
-  for (var i = 0; i < CABS.length; i++) {
+  for (i = 0; i < CABS.length; i++) {
     var id = CABS[i].id, r = o.cabs && o.cabs[id], rec;
     if (!r || typeof r !== 'object') { s.cabs[id] = d.cabs[id]; continue; }
     rec = {
@@ -823,7 +978,7 @@ var CABS = [];
     geo: {seed: 31, keep: digiKeep(), arm: [170, 468]}, nudge: [{x: 214, y: 556, dx: 1, dy: 0}, {x: 266, y: 556, dx: -1, dy: 0}],
     feat: digiFeat({}),
     odds: {base: 0.0145, kaku: 0.10, jitan: 0.0145, reach: 0.20, superRate: 0.30, superHit: 0.6, kakuRate: 0.5},
-    payout: {rounds: 5, balls: 8, perBall: 8, roundTime: 16, aim: 'right', startPay: 4, tulipPay: 8},
+    payout: {rounds: 5, balls: 8, perBall: 6, roundTime: 16, aim: 'right', startPay: 4, tulipPay: 8},
     difficulty: 3,
     tip: 'After a hit the HOT lamp means high odds. During rounds the attacker only takes right shots.',
     blurb: 'The modern layout: LCD reels, reach, super reach, kakuhen and jitan, and a right side attacker.'
@@ -859,7 +1014,7 @@ var CABS = [];
     feat: digiFeat({fans: fans}),
     odds: {base: 0.014, kaku: 0.10, jitan: 0.014, reach: 0.25, superRate: 0.4, superHit: 0.6, kakuRate: 0.5},
     duel: {win: 0.5},
-    payout: {rounds: 4, balls: 10, perBall: 8, roundTime: 15, aim: 'right', startPay: 4, tulipPay: 8},
+    payout: {rounds: 4, balls: 10, perBall: 6, roundTime: 15, aim: 'right', startPay: 4, tulipPay: 8},
     difficulty: 4,
     tip: 'The duel after the rounds decides what comes next. Win for kakuhen, lose for jitan.',
     blurb: 'Reach turns into a duel on the LCD. Two windmills keep the field lively.'
@@ -885,6 +1040,25 @@ var CABS = [];
     blurb: 'Completing the gate chain earns the right to a jackpot on the very next spin.'
   });
   c.lcd.symbols = ['seven', 'crown', 'diamond', 'star', 'moon', 'bell'];
+  CABS.push(c);
+})();
+
+/* 7. smart: the 2023 ball-less cabinet. Balls still rattle inside, but nothing is paid
+   out into a tray; the unit just counts. Rarer hits, far longer rushes. */
+(function () {
+  var c = mergeCab(digiBase(), {
+    id: 'smart', name: 'Smart Rush', era: '2023', variant: 'smart', seed: 0x7A8B9CA7, pre: 418,
+    palette: 'smart', phys: {rest: 0.40, wallRest: 0.32, fric: 0.16, grav: 1},
+    geo: {seed: 89, keep: digiKeep(), arm: [180, 472]}, nudge: [{x: 214, y: 556, dx: 1, dy: 0}, {x: 266, y: 556, dx: -2, dy: 0}],
+    feat: digiFeat({}),
+    odds: {base: 0.0065, kaku: 0.055, jitan: 0.0065, reach: 0.26, superRate: 0.38, superHit: 0.7, kakuRate: 0.78},
+    payout: {rounds: 7, balls: 8, perBall: 9, roundTime: 15, aim: 'right', startPay: 3, tulipPay: 8},
+    ballless: true,
+    difficulty: 5,
+    tip: 'Hits are rare and the rush is long. Nothing drops into a tray; the unit just counts.',
+    blurb: 'The 2023 cabinet that never pays a ball into your hands. Hard to start, and a rush that keeps going.'
+  });
+  c.lcd.symbols = ['seven', 'star', 'crown', 'diamond', 'moon', 'bell', 'clover'];
   CABS.push(c);
 })();
 
@@ -1060,14 +1234,23 @@ function evalSpin(cab, out, ctx) {
     else if (u[1] < o.reach) reach = 1 + (u[2] < o.superRate ? 1 : 0);
   }
   var a = Math.floor(u[4] * n) % n, b = (a + 1 + Math.floor(u[3] * (n - 1))) % n, c;
-  if (hit) syms = [a, a, a];
-  else if (reach) syms = [a, b, a];
-  else {
+  /* A slip is the near miss every hall knows: the last reel settles on the winning
+     symbol, holds, then creeps one place past it. A hitch is the same move on a win. */
+  var slip = false, hitch = false;
+  if (hit) {
+    syms = [a, a, a];
+    hitch = reach === 2 && u[7] < 0.65;
+  } else if (reach) {
+    slip = u[3] < 0.45;
+    if (slip) b = (a + 1) % n;
+    syms = [a, b, a];
+  } else {
     c = (b + 1 + Math.floor(u[7] * (n - 1))) % n;
     if (c === a) c = (c + 1) % n;
     syms = [a, b, c];
   }
-  return {hit: hit, reach: reach, syms: syms, usedKenri: usedKenri, rounds: 0, next: 'normal', duelWin: false};
+  return {hit: hit, reach: reach, syms: syms, slip: slip, hitch: hitch,
+    usedKenri: usedKenri, rounds: 0, next: 'normal', duelWin: false};
 }
 
 /* Fast forward past plays so each seat has a believable data counter on day one. */
@@ -1104,7 +1287,9 @@ function spinPlan(m, res) {
     else rd = fast ? 1.6 : 2.6;
     hold = fast ? 0.4 : 0.6;
   }
-  return {a: a, b: b, end: b + rd, hold: hold, dur: b + rd + hold};
+  /* a slip or a hitch needs room for the pause, so a plain reach is stretched a little */
+  if ((res.slip || res.hitch) && th === 'reel') rd += fast ? 0.5 : 0.9;
+  return {a: a, b: b, end: b + rd, hold: hold, dur: b + rd + hold, pause: !!(res.slip || res.hitch)};
 }
 
 function Machine(cab, rec, world) {
@@ -1374,8 +1559,9 @@ function RView(app, cab, world, machine, settings) {
   var L = this.L = {};
   var names = ['plastics', 'pins', 'features', 'balls', 'glow', 'lcd', 'fx', 'ui'];
   for (var i = 0; i < names.length; i++) { L[names[i]] = new PIXI.Container(); this.root.addChild(L[names[i]]); }
+  this.baseX = this.root.x; this.baseY = this.root.y; this.scale = 1;
   this.buildPlastics(); this.buildPins(); this.buildFeatures(); this.buildBalls(); this.buildGlow();
-  this.buildLcd(); this.buildFx(); this.buildUi();
+  this.buildLcd(); this.buildFx(); this.buildTray(); this.buildUi();
   this.applyEffects();
 }
 RView.prototype.applyEffects = function () {
@@ -1443,10 +1629,10 @@ RView.prototype.buildPlastics = function () {
   for (i = 0; i < cups.length; i++) g.roundRect(cups[i].x - cups[i].w / 2 - 2, cups[i].y - cups[i].h / 2 - 2, cups[i].w + 4, cups[i].h + 4, 3).fill(0x05070b);
   this.L.plastics.addChild(g);
   var lbl = new PIXI.Text({text: 'PLAY BALLS ONLY', style: {fontFamily: 'Chakra Petch, Arial, sans-serif', fontSize: 15, fontWeight: '700', fill: tr, letterSpacing: 3}});
-  lbl.anchor.set(0.5); lbl.alpha = 0.55; lbl.x = 190; lbl.y = P.OUT_Y + 56;
+  lbl.anchor.set(0.5); lbl.alpha = 0.55; lbl.x = 240; lbl.y = P.OUT_Y + 60;
   this.L.plastics.addChild(lbl);
   var nm = new PIXI.Text({text: cab.name.toUpperCase(), style: {fontFamily: 'Chakra Petch, Arial, sans-serif', fontSize: 12, fontWeight: '700', fill: pal.glow, letterSpacing: 2}});
-  nm.anchor.set(0.5); nm.alpha = 0.7; nm.x = 80; nm.y = P.OUT_Y + 28;
+  nm.anchor.set(0.5); nm.alpha = 0.7; nm.x = 50; nm.y = P.OUT_Y + 24; nm.scale.set(0.82);
   this.L.plastics.addChild(nm);
 };
 RView.prototype.buildPins = function () {
@@ -1565,6 +1751,7 @@ RView.prototype.buildLcd = function () {
   var c = this.lcd = new PIXI.Container();
   c.x = r.x; c.y = r.y; this.L.lcd.addChild(c);
   this.lcdBg = new PIXI.Graphics(); c.addChild(this.lcdBg);
+  this.auraG = new PIXI.Graphics(); c.addChild(this.auraG);
   this.compact = (th === 'drum' || th === 'seg');
   this.rw = this.compact ? (r.w - 16) / 3 : (r.w - 24) / 3;
   this.rh = this.compact ? r.h - 8 : 66;
@@ -1586,6 +1773,15 @@ RView.prototype.buildLcd = function () {
   c.addChild(this.duelG, this.holdG, this.gateG);
   if (!this.compact) c.addChild(this.tTop, this.tBot);
   c.addChild(this.tDuel);
+  this.cutBg = new PIXI.Graphics(); this.cutBg.visible = false;
+  this.cutBg.rect(0, this.ry + this.rh / 2 - 17, r.w, 34).fill({color: 0x05070b, alpha: 0.88});
+  this.cutBg.rect(0, this.ry + this.rh / 2 - 17, r.w, 2).fill(REACH_TINT[2]);
+  this.cutBg.rect(0, this.ry + this.rh / 2 + 15, r.w, 2).fill(REACH_TINT[2]);
+  c.addChild(this.cutBg);
+  this.tCut = new PIXI.Text({text: '', style: Object.assign({fontSize: 24, letterSpacing: 4, stroke: {color: 0x000000, width: 4}}, fs)});
+  this.tCut.anchor.set(0.5); this.tCut.x = r.w / 2; this.tCut.y = this.ry + this.rh / 2; this.tCut.visible = false;
+  c.addChild(this.tCut);
+  this.cutT = 0; this.cutKey = ''; this.auraLvl = -1; this.auraPaused = false;
   this.holdKey = '';
   /* hold lamps sit just under the panel on the compact themes */
   if (this.compact) { this.holdG.y = r.h + 11; }
@@ -1611,6 +1807,18 @@ RView.prototype.drawReel = function (i, symIdx, mode, glow) {
   drawSymbol(g, id, this.rw / 2, this.rh / 2, s, bgc, cream ? ({seven: 0xb3121f, bell: 0xc98a00, cherry: 0xb3122a, star: 0xc9a100, diamond: 0x0a7fa0, clover: 0x1c8a4a})[id] : (this.cab.lcd.theme === 'seg' ? pal.lcdFg : 0));
   g.roundRect(0, 0, this.rw, this.rh, 5).stroke({width: glow ? 3 : 1.5, color: glow ? pal.hot : pal.trim, alpha: glow ? 1 : 0.7});
 };
+/* How far the last reel has travelled, in symbols, at progress p through the reach.
+   Without a pause it simply decelerates. With one it eases to a single symbol short of
+   the target, stands dead still long enough to hurt, then creeps the last place. */
+function reelTravel(p, span, pause) {
+  if (!pause) return span * (1 - Math.pow(1 - p, 3));
+  var A = 0.72, B = 0.88, s1 = span - 1;
+  if (p <= A) return s1 * (1 - Math.pow(1 - p / A, 3));
+  if (p <= B) return s1;
+  var k = (p - B) / (1 - B);
+  return s1 + (1 - Math.pow(1 - k, 2));
+}
+var REACH_TINT = [0, 0x6ad8ff, 0xff4d5e];
 RView.prototype.updateLcd = function (dt) {
   var m = this.m, cab = this.cab, pal = this.pal, r = cab.lcd.rect, n = cab.lcd.symbols.length, t = this.t, i;
   var sp = m.spin, jp = m.jp, syms = m.lastSyms, top = '', bot = '', flash = false;
@@ -1623,16 +1831,23 @@ RView.prototype.updateLcd = function (dt) {
   } else if (sp) {
     var pl = sp.plan, st = sp.t, res = sp.res;
     var stopAt = [pl.a, pl.end, pl.b];
+    var live = res.reach && st >= pl.b && st < pl.end;
     for (i = 0; i < 3; i++) {
       var stopped = st >= stopAt[i];
-      var inReach = !stopped && i === 1 && res.reach && st >= pl.b;
-      if (stopped) this.drawReel(i, res.syms[i], 'stop', res.hit && st >= pl.end);
-      else {
-        var rate = inReach ? 5 : 18;
-        this.drawReel(i, Math.floor(st * rate + i * 3) % n, inReach ? 'reach' : 'spin', inReach && Math.floor(t * 8) % 2 === 0);
+      if (stopped) { this.drawReel(i, res.syms[i], 'stop', res.hit && st >= pl.end); continue; }
+      if (i === 1 && res.reach && st >= pl.b) {
+        /* the last reel: decelerate toward its symbol, with the pause if this spin has one */
+        var p0 = Math.floor(pl.b * 18 + 3) % n, T = res.syms[1];
+        var turns = res.reach === 2 ? 2 : 1;
+        var span = turns * n + (((T - p0) % n + n) % n);
+        var prog = clamp((st - pl.b) / Math.max(0.001, pl.end - pl.b), 0, 1);
+        var trav = reelTravel(prog, span, pl.pause);
+        this.drawReel(1, (p0 + Math.floor(trav)) % n, 'reach', Math.floor(t * (res.reach === 2 ? 14 : 8)) % 2 === 0);
+      } else {
+        this.drawReel(i, Math.floor(st * 18 + i * 3) % n, 'spin', false);
       }
     }
-    if (res.reach && st >= pl.b && st < pl.end) { top = res.reach === 2 ? 'SUPER REACH' : 'REACH'; flash = true; }
+    if (live) { top = res.reach === 2 ? 'SUPER REACH' : 'REACH'; flash = true; }
     else if (st >= pl.end) top = res.hit ? 'HIT' : 'MISS';
     bot = 'SPINNING';
   } else {
@@ -1672,8 +1887,44 @@ RView.prototype.updateLcd = function (dt) {
     this.tDuel.text = p < 1 ? 'VS' : (win ? 'WIN' : 'LOSE');
     setFill(this.tDuel, p < 1 ? pal.lcdFg : (win ? 0x4de08a : 0xff4d5e));
   }
-  var base = 0.22 + (jp ? 0.25 + 0.15 * Math.sin(t * 10) : 0) + (sp && sp.res.reach ? 0.12 : 0);
+  /* reach aura: white to cyan to red, and the rarer the colour the better the spin */
+  var lvl = 0, paused = false, prg = 0;
+  if (sp && sp.res.reach && sp.t >= sp.plan.b && sp.t < sp.plan.end) {
+    lvl = sp.res.reach;
+    prg = clamp((sp.t - sp.plan.b) / Math.max(0.001, sp.plan.end - sp.plan.b), 0, 1);
+    paused = sp.plan.pause && prg > 0.72 && prg < 0.88;
+  }
+  var ag = this.auraG;
+  if (lvl !== this.auraLvl || paused !== this.auraPaused) {
+    this.auraLvl = lvl; this.auraPaused = paused;
+    ag.clear();
+    if (lvl) {
+      var tint = paused ? 0xffffff : REACH_TINT[lvl];
+      ag.roundRect(2, 2, r.w - 4, r.h - 4, 8).stroke({width: paused ? 5 : 3, color: tint, alpha: 0.95});
+      ag.roundRect(6, 6, r.w - 12, r.h - 12, 6).stroke({width: 1, color: tint, alpha: 0.4});
+    }
+  }
+  ag.alpha = lvl ? (paused ? 1 : 0.45 + 0.4 * Math.sin(t * (lvl === 2 ? 16 : 9))) : 0;
+  /* the cut in that announces a super reach, and the shake that rides with it */
+  var ck = lvl === 2 ? (sp.plan.b + '|' + sp.res.syms.join(',')) : '';
+  if (ck && ck !== this.cutKey) { this.cutKey = ck; this.cutT = 0.9; Sfx.stinger(); }
+  if (!ck) this.cutKey = '';
+  if (this.cutT > 0) {
+    this.cutT -= dt;
+    this.tCut.visible = true; this.cutBg.visible = true;
+    this.cutBg.alpha = clamp(this.cutT * 2.2, 0, 1);
+    this.tCut.text = 'CHANCE';
+    this.tCut.alpha = clamp(this.cutT * 2.2, 0, 1);
+    this.tCut.scale.set(1 + (1 - clamp(this.cutT / 0.9, 0, 1)) * 0.5);
+    setFill(this.tCut, REACH_TINT[2]);
+  } else { this.tCut.visible = false; this.cutBg.visible = false; }
+  if (!this.settings.reduced) {
+    if (paused) this.shake = Math.max(this.shake, 1.6);
+    else if (lvl === 2 && prg > 0.5) this.shake = Math.max(this.shake, 0.7);
+  }
+  var base = 0.22 + (jp ? 0.25 + 0.15 * Math.sin(t * 10) : 0) + (lvl ? 0.1 + 0.08 * lvl : 0);
   this.glowLcd.alpha = base;
+  if (lvl) this.glowLcd.tint = REACH_TINT[lvl]; else this.glowLcd.tint = pal.glow;
 };
 RView.prototype.buildFx = function () {
   this.parts = [];
@@ -1691,6 +1942,94 @@ RView.prototype.buildFx = function () {
     this.pops.push({t: tx, life: 0, on: false});
   }
   this.startFlash = 0; this.shake = 0; this.flashAmt = 0;
+  /* the shower: balls arcing out of the machine and into the tray */
+  this.cas = [];
+  if (!this.cab.ballless) {
+    for (var c = 0; c < 36; c++) {
+      var cs = new PIXI.Sprite(Tex.ball);
+      cs.anchor.set(0.5); cs.visible = false;
+      this.L.fx.addChild(cs);
+      this.cas.push({s: cs, x0: 0, y0: 0, x1: 0, vy: 0, life: 0, max: 1, on: false});
+    }
+  }
+};
+RView.prototype.buildTray = function () {
+  this.trayG = new PIXI.Graphics();
+  this.pileG = new PIXI.Graphics();
+  this.L.features.addChild(this.trayG, this.pileG);
+  this.trayCount = 0; this.pileKey = -1; this.pileBump = 0;
+  var pal = this.pal, g = this.trayG;
+  if (this.cab.ballless) {
+    /* a smart cabinet has no tray at all, only a counter where one used to be */
+    g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 8).fill({color: 0x0a0c10, alpha: 0.92});
+    g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 8).stroke({width: 2, color: pal.trim, alpha: 0.5});
+    this.tCredit = new PIXI.Text({text: '0', style: {fontFamily: 'Orbitron, Chakra Petch, Arial, sans-serif', fontSize: 24, fontWeight: '800', fill: pal.hot, letterSpacing: 3}});
+    this.tCredit.anchor.set(0.5); this.tCredit.x = TRAY.x + TRAY.w / 2; this.tCredit.y = TRAY.y + TRAY.h / 2 + 1;
+    this.L.features.addChild(this.tCredit);
+    this.tCreditLbl = new PIXI.Text({text: 'HELD BALLS', style: {fontFamily: 'Chakra Petch, Arial, sans-serif', fontSize: 9, fontWeight: '700', fill: pal.trim, letterSpacing: 3}});
+    this.tCreditLbl.anchor.set(0.5); this.tCreditLbl.x = TRAY.x + 58; this.tCreditLbl.y = TRAY.y + 9;
+    this.L.features.addChild(this.tCreditLbl);
+    return;
+  }
+  g.roundRect(TRAY.x - 4, TRAY.y - 4, TRAY.w + 8, TRAY.h + 8, 10).fill(pal.frame);
+  g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 7).fill(0x05070b);
+  g.roundRect(TRAY.x, TRAY.y, TRAY.w, TRAY.h, 7).stroke({width: 2, color: pal.trim, alpha: 0.55});
+  g.moveTo(TRAY.x + 10, TRAY.y + TRAY.h).lineTo(TRAY.x + TRAY.w - 10, TRAY.y + TRAY.h).stroke({width: 2, color: pal.glow, alpha: 0.2});
+};
+/* The pile is drawn as rows of balls so a full tray reads as metal, not as a bar. */
+RView.prototype.updatePile = function (dt) {
+  if (this.cab.ballless) {
+    if (this.tCredit && this.pileKey !== this.trayCount) {
+      this.pileKey = this.trayCount;
+      this.tCredit.text = String(this.trayCount);
+    }
+    if (this.tCredit) this.tCredit.alpha = 0.75 + 0.25 * Math.sin(this.t * 3);
+    return;
+  }
+  if (this.pileBump > 0) this.pileBump -= dt * 2;
+  var fill = clamp(this.trayCount / 2400, 0, 1);
+  var rows = Math.round(fill * 4 * 10) / 10, key = Math.round(rows * 10);
+  if (key === this.pileKey) return;
+  this.pileKey = key;
+  var g = this.pileG, pal = this.pal, r, i, full = Math.floor(rows), part = rows - full;
+  g.clear();
+  for (r = 0; r < 4; r++) {
+    var amt = r < full ? 1 : (r === full ? part : 0);
+    if (amt <= 0) break;
+    var y = TRAY.y + TRAY.h - 7 - r * 8.5, cols = Math.floor((TRAY.w - 14) / 10);
+    for (i = 0; i < Math.round(cols * amt); i++) {
+      g.circle(TRAY.x + 10 + i * 10 + (r % 2) * 4, y, 4.4).fill({color: 0xc8d2e0, alpha: 0.95});
+      g.circle(TRAY.x + 8.6 + i * 10 + (r % 2) * 4, y - 1.4, 1.5).fill({color: 0xffffff, alpha: 0.7});
+    }
+  }
+};
+RView.prototype.cascade = function (x, y, n) {
+  if (this.cab.ballless || this.settings.reduced) return;
+  var want = Math.min(n, 6), k = 0;
+  for (var i = 0; i < this.cas.length && k < want; i++) {
+    var p = this.cas[i];
+    if (p.on) continue;
+    p.on = true; p.life = 0; p.max = 0.45 + Math.random() * 0.25;
+    p.x0 = x; p.y0 = y;
+    p.x1 = TRAY.x + 14 + Math.random() * (TRAY.w - 28);
+    p.s.visible = true; p.s.x = x; p.s.y = y; p.s.scale.set(1);
+    k++;
+  }
+};
+RView.prototype.updateCascade = function (dt) {
+  var landed = 0;
+  for (var i = 0; i < this.cas.length; i++) {
+    var p = this.cas[i];
+    if (!p.on) continue;
+    p.life += dt;
+    var u = p.life / p.max;
+    if (u >= 1) { p.on = false; p.s.visible = false; landed++; continue; }
+    /* a flat arc out of the machine, then a drop into the tray */
+    p.s.x = lerp(p.x0, p.x1, u);
+    p.s.y = lerp(p.y0, TRAY.y + 6, u * u) - Math.sin(u * Math.PI) * 26;
+    p.s.alpha = u > 0.85 ? (1 - u) / 0.15 : 1;
+  }
+  if (landed) { this.pileBump = 1; Sfx.pin(400); }
 };
 RView.prototype.burst = function (x, y, color, n, spd) {
   if (this.settings.reduced) n = Math.ceil(n / 3);
@@ -1788,6 +2127,7 @@ RView.prototype.layout = function (w, h) {
   this.root.scale.set(s);
   this.root.x = Math.round((w - PHYS.W * s) / 2);
   this.scale = s;
+  this.baseX = this.root.x; this.baseY = this.root.y;
 };
 RView.prototype.update = function (dt) {
   this.t += dt;
@@ -1800,7 +2140,18 @@ RView.prototype.update = function (dt) {
   this.updateFeatures();
   this.updateLcd(dt);
   this.updateFx(dt);
+  this.updateCascade(dt);
+  this.updatePile(dt);
   this.updateUi(dt);
+  /* screen shake, applied to the board root and nothing else */
+  if (this.shake > 0) {
+    this.shake = Math.max(0, this.shake - dt * 3.2);
+    var k = this.shake * this.scale * 2.2;
+    this.root.x = this.baseX + (Math.random() - 0.5) * k;
+    this.root.y = this.baseY + (Math.random() - 0.5) * k;
+  } else if (this.root.x !== this.baseX || this.root.y !== this.baseY) {
+    this.root.x = this.baseX; this.root.y = this.baseY;
+  }
 };
 RView.prototype.destroy = function () {
   if (this.root.parent) this.root.parent.removeChild(this.root);
@@ -1854,11 +2205,11 @@ function launching() { return IN.dialHeld || IN.stageHeld || IN.keyHeld; }
 function releaseAll() { IN.dialHeld = false; IN.stageHeld = false; IN.keyHeld = false; }
 function tryLaunch() {
   if (!WORLD || !MACH) return;
-  if (STATE.bank <= 0) { syncHud(true); return; }
+  if (STATE.tray <= 0) { syncHud(true); return; }
   if (WORLD.active() >= MAX_BALLS) return;
   var b = WORLD.launch(IN.stream, IN.power, jitterStream);
   if (b) {
-    STATE.bank--; IN.cd = PHYS.LAUNCH_CD;
+    STATE.tray--; IN.cd = PHYS.LAUNCH_CD;
     Sfx.launch(); markDirty();
   }
 }
@@ -1914,10 +2265,17 @@ function bindInput() {
 
 /* ===== SECTION 11: UI ===== */
 var STATE = null, APPX = null, VIEW = null, WORLD = null, MACH = null, CAB = null;
-var UI = {screen: 'hall', overlay: null, dirty: false, acc: 0, hudT: 0, resetT: 0, resetArmed: false, liveT: 0};
+var UI = {screen: 'hall', overlay: null, dirty: false, acc: 0, hudT: 0, resetT: 0, resetArmed: false,
+  liveT: 0, hits: 0, toastT: 0, cnt: null};
 
 function $(id) { return document.getElementById(id); }
 function pad3(n) { n = String(Math.min(n, 999)); while (n.length < 3) n = '0' + n; return n; }
+function grp(n) {
+  n = String(Math.max(0, Math.floor(n)));
+  for (var i = n.length - 3; i > 0; i -= 3) n = n.slice(0, i) + ',' + n.slice(i);
+  return n;
+}
+function yen(n) { return String.fromCharCode(165) + grp(n); }
 function markDirty() { UI.dirty = true; }
 function flushSave() {
   if (!STATE) return;
@@ -1926,12 +2284,63 @@ function flushSave() {
 }
 function announce(msg) { var l = $('live'); if (l) l.textContent = msg; }
 
+/* ---- plaques ---- */
+function plaqueById(id) {
+  for (var i = 0; i < PLAQUES.length; i++) if (PLAQUES[i].id === id) return PLAQUES[i];
+  return null;
+}
+function award(id) {
+  if (!STATE || STATE.plaques.indexOf(id) >= 0) return false;
+  var p = plaqueById(id);
+  if (!p) return false;
+  STATE.plaques.push(id); markDirty();
+  var t = $('toast');
+  t.innerHTML = '<span class="t-lbl">PLAQUE EARNED</span><b>' + p.name + '</b><span class="t-note">' + p.note + '</span>';
+  t.classList.add('show');
+  UI.toastT = 3.4;
+  Sfx.stinger();
+  announce('Plaque earned. ' + p.name + '.');
+  return true;
+}
+function checkStanding() {
+  if (!STATE) return;
+  if (STATE.tray >= 2000) award('heavy');
+  if (STATE.prizes.length >= 6) award('collector');
+  if (STATE.prizes.indexOf('bar') >= 0) award('whale');
+  if (STATE.seen.length >= CABS.length) award('tour');
+}
+function tickToast(dt) {
+  if (UI.toastT <= 0) return;
+  UI.toastT -= dt;
+  if (UI.toastT <= 0) $('toast').classList.remove('show');
+}
+
+/* ---- the economy ---- */
+function perBill() { return Math.floor(ECON.bill / STATE.rate); }
+function rent() {
+  if (STATE.wallet < ECON.bill) return false;
+  STATE.wallet -= ECON.bill;
+  STATE.tray += perBill();
+  STATE.spent += ECON.bill;
+  markDirty();
+  Sfx.pocket();
+  announce('Rented ' + perBill() + ' balls for ' + yen(ECON.bill) + '.');
+  return true;
+}
+function stakeMe() {
+  STATE.wallet += ECON.lend; markDirty();
+  announce('The hall stakes you ' + yen(ECON.lend) + '.');
+}
+function specialsIn(balls) { return Math.floor(balls / ECON.specialBalls); }
+function specialValue() { return Math.round(ECON.specialYen * STATE.rate / 4); }
+
 /* ---- hall ---- */
 var FAMILY_TAG = {tulip: 'TULIP', wing: 'WING', digi: 'DIGI'};
 function familyLabel(cab) {
   if (cab.variant === 'senpuku') return 'DIGI HIDDEN';
   if (cab.variant === 'battle') return 'DIGI DUEL';
   if (cab.variant === 'kenri') return 'DIGI GATES';
+  if (cab.variant === 'smart') return 'SMART';
   return FAMILY_TAG[cab.family];
 }
 function seatHtml(cab, rec) {
@@ -1957,7 +2366,15 @@ function renderSeatCards() {
   var h = '';
   for (var i = 0; i < CABS.length; i++) h += seatHtml(CABS[i], STATE.cabs[CABS[i].id]);
   $('seat-grid').innerHTML = h;
-  $('bank-hall').textContent = STATE.bank;
+  syncHall();
+}
+function syncHall() {
+  $('wallet-hall').textContent = yen(STATE.wallet);
+  $('tray-hall').textContent = grp(STATE.tray);
+  $('rate-btn').textContent = STATE.rate + ' YEN';
+  $('rate-btn').setAttribute('aria-label', 'Island rate, ' + STATE.rate + ' yen per ball. Tap to switch.');
+  var n = specialsIn(STATE.tray);
+  $('counter-btn').textContent = n > 0 ? 'Counter (' + n + ')' : 'Counter';
 }
 function setScreen(name) {
   UI.screen = name;
@@ -1976,10 +2393,11 @@ function machineEvent(type, d) {
   if (type === 'persist') { markDirty(); return; }
   var v = VIEW;
   if (type === 'pay') {
-    STATE.bank += d.n; markDirty();
-    if (v && d.x) { v.popup(d.x, d.y, d.n, d.why === 'round' ? v.pal.hot : 0xffffff); }
+    STATE.tray += d.n; markDirty();
+    if (v && d.x) { v.popup(d.x, d.y, d.n, d.why === 'round' ? v.pal.hot : 0xffffff); v.cascade(d.x, d.y, d.n); }
     if (d.why === 'start' || d.why === 'round' || d.why === 'catch') Sfx.pocket();
   } else if (type === 'sensor') {
+    if (d.kind === 'start') award('firstspin');
     if (v && (d.kind === 'start' || d.kind === 'pocket' || d.kind === 'catch')) {
       v.burst(d.x, d.y, v.pal.hot, d.kind === 'start' ? 10 : 6, 150);
       if (d.kind === 'start') v.startFlash = 1;
@@ -1987,7 +2405,9 @@ function machineEvent(type, d) {
   } else if (type === 'reach') {
     Sfx.reach(); announce(d === 2 ? 'Super reach' : 'Reach');
   } else if (type === 'jackpot') {
-    Sfx.stinger(); if (v) { v.showBanner('JACKPOT'); v.flashAmt = 1; }
+    Sfx.stinger(); if (v) { v.showBanner('JACKPOT'); v.flashAmt = 1; v.shake = 2; }
+    award('firsthit');
+    UI.hits++; if (UI.hits >= 3) award('streak');
     announce('Jackpot. ' + d.rounds + ' rounds.');
   } else if (type === 'round') {
     Sfx.cascade();
@@ -1998,10 +2418,13 @@ function machineEvent(type, d) {
   } else if (type === 'jackpotEnd') {
     var t = d === 'kakuhen' ? 'KAKUHEN' : (d === 'jitan' ? 'JITAN' : '');
     if (t && v) { v.showBanner(t); v.flashAmt = 0.7; }
+    if (d === 'kakuhen') { award('kakuhen'); if (CAB.variant === 'battle') award('duel'); }
+    if (d === 'hidden') award('hidden');
     announce(d === 'kakuhen' ? 'Kakuhen. High odds.' : (d === 'jitan' ? 'Jitan. Fast spins.' : 'Jackpot over.'));
     flushSave();
   } else if (type === 'kenri') {
     Sfx.stinger(); if (v) { v.showBanner('KENRI'); v.flashAmt = 0.6; }
+    award('gates');
     announce('Kenri earned. The next spin is likely a hit.');
   } else if (type === 'gate') {
     if (!d.ok) Sfx.thud();
@@ -2011,6 +2434,8 @@ function showCabinet(id) {
   var cab = cabById(id);
   if (!cab || !APPX) return;
   CAB = cab;
+  if (STATE.seen.indexOf(id) < 0) { STATE.seen.push(id); markDirty(); }
+  UI.hits = 0;
   WORLD = new World(cab);
   MACH = createMachine(cab, STATE.cabs[id], WORLD);
   MACH.listener = machineEvent;
@@ -2024,6 +2449,7 @@ function showCabinet(id) {
   setScreen('cabinet');
   resizeStage();
   syncHud(true);
+  checkStanding();
   announce(cab.name + '. ' + cab.tip);
 }
 function leaveCabinet() {
@@ -2042,7 +2468,8 @@ function resizeStage() {
 }
 function syncHud(force) {
   if (!MACH) return;
-  $('hud-bank').textContent = STATE.bank;
+  $('hud-bank').textContent = grp(STATE.tray);
+  if (VIEW) VIEW.trayCount = STATE.tray;
   var lb = MACH.label(), pill = $('hud-mode');
   if (pill.textContent !== lb.text) pill.textContent = lb.text;
   pill.className = 'pill ' + lb.cls;
@@ -2050,8 +2477,15 @@ function syncHud(force) {
   $('hud-since').textContent = MACH.rec.since;
   var dem = MACH.aimDemand() && IN.stream !== 'R';
   $('aim').classList.toggle('demand', dem);
-  var out = STATE.bank <= 0 && WORLD.active() === 0 && !MACH.spin;
-  $('refill').hidden = !(STATE.bank <= 0 && WORLD.active() === 0);
+  if (MACH.rec.since >= 250) award('patience');
+  if (STATE.tray >= 2000) award('heavy');
+  var dry = STATE.tray <= 0 && WORLD.active() === 0;
+  $('rent-wrap').hidden = !dry;
+  if (dry) {
+    var can = STATE.wallet >= ECON.bill;
+    $('rent-btn').textContent = can ? ('Insert ' + yen(ECON.bill) + ' for ' + perBill() + ' balls') : ('Wallet empty. Take ' + yen(ECON.lend));
+    $('rent-note').textContent = can ? ('Wallet ' + yen(STATE.wallet) + ' at ' + STATE.rate + ' yen a ball') : 'The hall will stake you.';
+  }
 }
 function frame(tk) {
   if (UI.screen !== 'cabinet' || !MACH || !VIEW) return;
@@ -2065,11 +2499,15 @@ function frame(tk) {
   if (n >= 8) UI.acc = 0;
   MACH.update(dt);
   VIEW.update(dt);
+  tickToast(dt);
+  var sp = MACH.spin;
+  if (sp && sp.res.slip && sp.t >= sp.plan.end) award('slip');
   UI.hudT -= dt;
   if (UI.hudT <= 0) { syncHud(); UI.hudT = 0.12; }
 }
 
 /* ---- overlays ---- */
+var OVERLAYS = ['settings-modal', 'help-sheet', 'counter-sheet', 'case-sheet'];
 function openOverlay(id) {
   releaseAll();
   closeOverlays(true);
@@ -2079,9 +2517,125 @@ function openOverlay(id) {
   if (f) f.focus();
 }
 function closeOverlays(keep) {
-  var ids = ['settings-modal', 'help-sheet'];
-  for (var i = 0; i < ids.length; i++) $(ids[i]).classList.toggle('open', false);
+  for (var i = 0; i < OVERLAYS.length; i++) $(OVERLAYS[i]).classList.toggle('open', false);
   if (!keep) UI.overlay = null;
+  if (UI.cnt) { clearInterval(UI.cnt); UI.cnt = null; }
+}
+
+/* ---- the counter, the prize shelf and the window round the corner ---- */
+function prizeById(id) {
+  for (var i = 0; i < PRIZES.length; i++) if (PRIZES[i].id === id) return PRIZES[i];
+  return null;
+}
+function prizeRow(p) {
+  var have = STATE.prizes.indexOf(p.id) >= 0, can = STATE.tray >= p.cost;
+  return '<button type="button" class="prz' + (have ? ' have' : '') + '" data-prize="' + p.id + '"' +
+    (have || !can ? ' disabled' : '') + '>' +
+    '<span class="prz-name">' + p.name + '</span>' +
+    '<span class="prz-cost">' + (have ? 'ON THE SHELF' : grp(p.cost) + ' balls') + '</span></button>';
+}
+function counterStage(stage, data) {
+  var el = $('cnt-body'), h = '', i;
+  if (UI.cnt) { clearInterval(UI.cnt); UI.cnt = null; }
+  if (stage === 'tally') {
+    h = '<p class="cnt-lead">The tray goes into the counter.</p>' +
+        '<div class="jet"><span class="lbl">COUNTED</span><b id="jet-num">0</b></div>';
+    el.innerHTML = h;
+    var target = STATE.tray, shown = 0, step = Math.max(1, Math.ceil(target / 36));
+    UI.cnt = setInterval(function () {
+      shown = Math.min(target, shown + step);
+      var jn = $('jet-num');
+      if (jn) jn.textContent = grp(shown);
+      if (shown >= target) { clearInterval(UI.cnt); UI.cnt = null; setTimeout(function () { if (UI.overlay === 'counter-sheet') counterStage('shelf'); }, 420); }
+    }, 34);
+    return;
+  }
+  if (stage === 'shelf') {
+    var sp = specialsIn(STATE.tray), val = sp * specialValue();
+    h += '<div class="jet small"><span class="lbl">IN THE TRAY</span><b>' + grp(STATE.tray) + '</b></div>';
+    h += '<h3>Special prize</h3>';
+    if (sp > 0) {
+      h += '<p>' + sp + ' gold sliver' + (sp === 1 ? '' : 's') + ' in a plastic case, ' + grp(ECON.specialBalls) + ' balls each. ' +
+           'The hall cannot pay you cash, but the window round the corner buys them for ' + yen(val) + '.</p>';
+      h += '<button type="button" class="btn" id="cnt-special">Take ' + sp + ' and walk round</button>';
+    } else {
+      h += '<p>You need ' + grp(ECON.specialBalls) + ' balls for one. You have ' + grp(STATE.tray) + '.</p>';
+    }
+    h += '<h3>The shelf</h3><div class="shelf">';
+    for (i = 0; i < PRIZES.length; i++) h += prizeRow(PRIZES[i]);
+    h += '</div>';
+    h += '<h3>Member card</h3><p>Leftover balls can sit on the card until your next visit. Stored: ' + grp(STATE.stored) + '.</p>';
+    h += '<div class="cnt-row">';
+    if (STATE.tray > 0) h += '<button type="button" class="row-btn" id="cnt-store">Store ' + grp(STATE.tray) + ' on the card</button>';
+    if (STATE.stored > 0) h += '<button type="button" class="row-btn" id="cnt-draw">Draw ' + grp(STATE.stored) + ' back out</button>';
+    h += '</div>';
+    h += '<button type="button" class="btn" id="cnt-close">Back to the floor</button>';
+    el.innerHTML = h;
+    return;
+  }
+  if (stage === 'walk') {
+    h = '<div class="walk" aria-hidden="true"><span class="w-step on">Counter</span><span class="w-dash"></span>' +
+        '<span class="w-step on">Prize desk</span><span class="w-dash"></span><span class="w-step on">The window</span></div>' +
+        '<p class="cnt-lead">Three doors, three businesses, no gambling anywhere in sight.</p>' +
+        '<div class="jet pay"><span class="lbl">PAID OUT</span><b>' + yen(data.yen) + '</b></div>' +
+        '<p>' + data.n + ' special prize' + (data.n === 1 ? '' : 's') + ' handed over. ' +
+        'They go back to the hall by van tomorrow and someone else wins them.</p>' +
+        (STATE.tray > 0 || STATE.stored > 0 ? '<button type="button" class="row-btn" id="cnt-back">Back to the shelf (' + grp(STATE.tray) + ' balls left)</button>' : '') +
+        '<button type="button" class="btn" id="cnt-close">Back to the floor</button>';
+    el.innerHTML = h;
+  }
+}
+function openCounter() {
+  openOverlay('counter-sheet');
+  counterStage('tally');
+}
+function doSpecial() {
+  var n = specialsIn(STATE.tray);
+  if (n <= 0) return;
+  var got = n * specialValue();
+  STATE.tray -= n * ECON.specialBalls;
+  STATE.wallet += got;
+  STATE.cashed += got;
+  if (got > STATE.best) STATE.best = got;
+  markDirty(); flushSave();
+  award('cashout');
+  Sfx.cascade();
+  announce('Exchanged ' + n + ' special prizes for ' + yen(got) + '.');
+  counterStage('walk', {n: n, yen: got});
+}
+function claimPrize(id) {
+  var p = prizeById(id);
+  if (!p || STATE.prizes.indexOf(id) >= 0 || STATE.tray < p.cost) return;
+  STATE.tray -= p.cost;
+  STATE.prizes.push(id);
+  markDirty(); flushSave();
+  Sfx.pocket();
+  announce(p.name + ' claimed.');
+  checkStanding();
+  counterStage('shelf');
+}
+function buildCase() {
+  var h = '', i, p, have;
+  h += '<h2 id="case-title">The case by the door</h2>';
+  h += '<div class="stat-row"><span>SPENT<b>' + yen(STATE.spent) + '</b></span><span>CASHED<b>' + yen(STATE.cashed) + '</b></span>' +
+       '<span>NET<b class="' + (STATE.cashed - STATE.spent >= 0 ? 'up' : 'down') + '">' +
+       (STATE.cashed - STATE.spent >= 0 ? '+' : '-') + yen(Math.abs(STATE.cashed - STATE.spent)) + '</b></span></div>';
+  h += '<h3>Prizes taken home (' + STATE.prizes.length + ' of ' + PRIZES.length + ')</h3><div class="shelf show">';
+  for (i = 0; i < PRIZES.length; i++) {
+    p = PRIZES[i]; have = STATE.prizes.indexOf(p.id) >= 0;
+    h += '<div class="prz' + (have ? ' have' : ' locked') + '"><span class="prz-name">' + (have ? p.name : 'Not yet claimed') +
+         '</span><span class="prz-cost">' + grp(p.cost) + ' balls</span></div>';
+  }
+  h += '</div>';
+  h += '<h3>Plaques (' + STATE.plaques.length + ' of ' + PLAQUES.length + ')</h3><div class="plaques">';
+  for (i = 0; i < PLAQUES.length; i++) {
+    p = PLAQUES[i]; have = STATE.plaques.indexOf(p.id) >= 0;
+    h += '<div class="plq' + (have ? ' have' : '') + '"><b>' + (have ? p.name : 'Locked') + '</b><span>' + p.note + '</span></div>';
+  }
+  h += '</div>';
+  h += '<button type="button" class="btn" id="case-close">Done</button>';
+  $('case-body').innerHTML = h;
+  $('case-close').addEventListener('click', function () { closeOverlays(); });
 }
 function oneIn(x) { return x > 0 ? '1 in ' + Math.round(1 / x) : 'none'; }
 function buildHelp() {
@@ -2089,22 +2643,30 @@ function buildHelp() {
   h += '<h2 id="help-title">' + c.name + ' <small>' + c.era + '</small></h2>';
   h += '<p>' + c.blurb + '</p>';
   h += '<h3>Playing</h3><p>Hold the dial, or press and hold the stage, to keep firing. Turn the dial to set launch power, and pick the left or right stream. ' +
-       'The marker above the pins shows where your shot lands. Each shot costs one ball and the start pocket pays ' + p.startPay + '.</p>';
+       'The marker above the pins shows where your shot lands. Each shot costs one ball from the tray and the start pocket pays ' + p.startPay + '.</p>';
   h += '<h3>Odds per spin</h3><p>Base ' + oneIn(o.base) + '.';
   if (o.kaku !== o.base) h += ' Kakuhen ' + oneIn(o.kaku) + ', lasting until the next hit.';
   if (c.odds.kakuRate > 0 && c.variant !== 'battle') h += ' After a hit, ' + Math.round(o.kakuRate * 100) + ' percent go to kakuhen and the rest to jitan.';
   if (c.odds.kakuRate > 0) h += ' Jitan gives ' + PHYS.JITAN_SPINS + ' fast spins at base odds.';
   if (o.reach > 0) h += ' About ' + Math.round(o.reach * 100) + ' percent of misses reach, and some are super reach.';
   h += '</p>';
+  if (o.reach > 0) {
+    h += '<h3>Reading the reach</h3><p>A cyan frame is an ordinary reach. A red frame and a CHANCE cut in mean super reach, which is rarer and far more often a hit. ' +
+         'When the last reel stops dead on the matching symbol and holds, it has not decided yet: it either slips one place past you or slides home.</p>';
+  }
   h += '<h3>Jackpot</h3><p>' + p.rounds + ' rounds of up to ' + p.balls + ' balls, ' + p.perBall + ' each.' +
        (p.aim === 'right' ? ' The attacker only catches right stream shots, so flip the stream when the AIM lamp pulses.' : ' Any stream works while the feature is open.') + '</p>';
   if (c.variant === 'senpuku') h += '<h3>Hidden mode</h3><p>About ' + Math.round(c.senpuku.p2R * 100) + ' percent of hits are a short 2R. Roughly half of those secretly switch on high odds for ' + 100 + ' spins. The machine looks normal, so read the history.</p>';
   if (c.variant === 'battle') h += '<h3>Duel</h3><p>After the rounds the LCD runs a duel. Win and you get kakuhen. Lose and you get jitan.</p>';
   if (c.variant === 'kenri') h += '<h3>Gates</h3><p>Pass the three gates in order, 1 then 2 then 3. A wrong gate resets the chain, and gate 1 starts it again. Completing it gives the right to a very likely hit on the next spin.</p>';
+  if (c.variant === 'smart') h += '<h3>No tray</h3><p>A smart cabinet pays nothing into your hands. Balls still rattle inside, but the unit simply counts, which is why hits are rare and the rush runs long.</p>';
   if (c.family === 'tulip') h += '<h3>Tulips</h3><p>A ball in the bell pocket opens every tulip for two seconds. A jackpot holds them open.</p>';
   if (c.family === 'wing') h += '<h3>Wings</h3><p>The wings clap on a steady beat. A jackpot latches them open and every ball in the pocket pays.</p>';
+  h += '<h3>The money</h3><p>Balls are rented, never bought, and they belong to the hall. At ' + STATE.rate + ' yen a ball a ' + yen(ECON.bill) +
+       ' note buys ' + perBill() + '. Take the tray to the counter when you leave: ' + grp(ECON.specialBalls) + ' balls make one special prize worth ' + yen(specialValue()) +
+       ' at the window round the corner, which is less than they cost to rent. That gap is the hall.</p>';
   h += '<h3>Reading tip</h3><p>' + c.tip + '</p>';
-  h += '<p class="fine">Leaving the seat settles any spins still waiting. Play balls only, no money.</p>';
+  h += '<p class="fine">Leaving the seat settles any spins still waiting. Play balls only, no real money.</p>';
   h += '<button class="btn" id="help-close">Got it</button>';
   $('help-body').innerHTML = h;
   $('help-close').addEventListener('click', function () { closeOverlays(); });
@@ -2114,7 +2676,7 @@ function syncSettingsUi() {
   $('set-sound').setAttribute('aria-pressed', STATE.settings.sound ? 'true' : 'false');
   $('set-reduced').textContent = 'Reduced effects: ' + (STATE.settings.reduced ? 'On' : 'Off');
   $('set-reduced').setAttribute('aria-pressed', STATE.settings.reduced ? 'true' : 'false');
-  $('set-reset').textContent = UI.resetArmed ? 'Tap again to confirm' : 'Reset balls and histories';
+  $('set-reset').textContent = UI.resetArmed ? 'Tap again to confirm' : 'Reset the whole visit';
   $('set-reset').classList.toggle('armed', UI.resetArmed);
 }
 function doReset() {
@@ -2127,7 +2689,7 @@ function doReset() {
   closeOverlays();
   if (UI.screen === 'cabinet') { if (WORLD) WORLD.clear(); MACH = null; showHall(); }
   else renderSeatCards();
-  announce('Balls and histories reset.');
+  announce('Wallet, tray, prizes and histories reset.');
 }
 function bindUi() {
   $('seat-grid').addEventListener('click', function (e) {
@@ -2151,20 +2713,38 @@ function bindUi() {
       UI.resetT = setTimeout(function () { UI.resetArmed = false; syncSettingsUi(); }, 4000);
     } else { clearTimeout(UI.resetT); doReset(); }
   });
-  $('refill').addEventListener('click', function () {
-    STATE.bank += 200; markDirty(); syncHud(true); announce('The hall lends you 200 balls.');
+  $('rate-btn').addEventListener('click', function () {
+    STATE.rate = STATE.rate === 4 ? 1 : 4; markDirty(); syncHall();
+    announce('Island rate ' + STATE.rate + ' yen a ball.');
   });
-  var ov = ['settings-modal', 'help-sheet'];
-  for (var i = 0; i < ov.length; i++) {
-    $(ov[i]).addEventListener('click', function (e) { if (e.target === e.currentTarget) { closeOverlays(); } });
+  $('counter-btn').addEventListener('click', function () { Sfx.unlock(); openCounter(); });
+  $('case-btn').addEventListener('click', function () { buildCase(); openOverlay('case-sheet'); });
+  $('cnt-body').addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target.closest('button') : null;
+    if (!t) return;
+    if (t.id === 'cnt-close') { closeOverlays(); syncHall(); return; }
+    if (t.id === 'cnt-special') { doSpecial(); syncHall(); return; }
+    if (t.id === 'cnt-back') { counterStage('shelf'); return; }
+    if (t.id === 'cnt-store') { STATE.stored += STATE.tray; STATE.tray = 0; markDirty(); flushSave(); counterStage('shelf'); syncHall(); return; }
+    if (t.id === 'cnt-draw') { STATE.tray += STATE.stored; STATE.stored = 0; markDirty(); flushSave(); counterStage('shelf'); syncHall(); return; }
+    var pid = t.getAttribute('data-prize');
+    if (pid) { claimPrize(pid); syncHall(); }
+  });
+  $('rent-btn').addEventListener('click', function () {
+    if (STATE.wallet >= ECON.bill) rent(); else stakeMe();
+    syncHud(true); syncHall();
+  });
+  for (var i = 0; i < OVERLAYS.length; i++) {
+    $(OVERLAYS[i]).addEventListener('click', function (e) { if (e.target === e.currentTarget) { closeOverlays(); syncHall(); } });
   }
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && UI.overlay) closeOverlays(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && UI.overlay) { closeOverlays(); syncHall(); } });
   window.addEventListener('resize', resizeStage);
   window.addEventListener('orientationchange', function () { setTimeout(resizeStage, 250); });
   if (window.ResizeObserver) new ResizeObserver(function () { resizeStage(); }).observe($('pixi-host'));
   document.addEventListener('visibilitychange', function () { if (document.hidden) flushSave(); });
   window.addEventListener('pagehide', flushSave);
   setInterval(function () { if (UI.dirty) flushSave(); }, 1500);
+  setInterval(function () { if (UI.screen === 'hall') tickToast(0.25); }, 250);
 }
 
 /* ===== SECTION 12: BOOT ===== */

@@ -12,7 +12,7 @@
 <script src="https://augustineiacopelli.github.io/appaday/save.js" defer></script>
 <title>Pachinko Hall | AppADay 187</title>
 <meta name="theme-color" content="#070b12">
-<meta name="description" content="Six pachinko cabinets from mechanical tulips to digital reels. Seeded odds, custom ball physics, play balls only, no money.">
+<meta name="description" content="Seven pachinko cabinets from 1962 tulips to the ball-less smart machine. Rent balls, read the counters, exchange at the window. Seeded odds, custom physics.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Orbitron:wght@700;800&display=swap" rel="stylesheet">
@@ -101,7 +101,53 @@ body.nopixi .screen{display:none!important}
 #dial-val{fill:none;stroke:var(--amber);stroke-width:6;stroke-linecap:round}
 #dial-thumb{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dfe8f7,#7e8da6 60%,#39465c);border:2px solid #0a101c;box-shadow:0 2px 8px rgba(0,0,0,.6);pointer-events:none}
 #dial-read{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:Orbitron,monospace;font-weight:800;font-size:.85rem;color:#fff;pointer-events:none;text-shadow:0 1px 3px #000;z-index:2}
-#refill{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:6;box-shadow:0 0 0 3px rgba(255,255,255,.15),0 10px 30px rgba(0,0,0,.6)}
+#rent-wrap{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:8px;width:min(92%,21rem);padding:16px 14px;background:rgba(10,15,25,.95);border:1px solid var(--acc);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.7);text-align:center}
+.rent-head{font-size:.68rem;letter-spacing:.18em;color:var(--mut)}
+.rent-note{font-size:.76rem;color:var(--mut);line-height:1.35}
+#rent-wrap .btn{width:100%}
+/* hall economy strip */
+.hallbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:7px calc(10px + var(--sr)) 7px calc(10px + var(--sl));background:#0a1120;border-bottom:1px solid var(--line)}
+.hb-stat{display:flex;flex-direction:column;gap:2px;padding-right:6px;min-width:3.6rem}
+.hb-stat b{font-family:Orbitron,monospace;font-size:.95rem;line-height:1.1}
+.hb-stat b.amber{color:var(--amber)}
+.hb-btn{flex:1 1 auto;min-height:44px;padding:0 10px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-weight:700;font-size:.78rem;letter-spacing:.06em;white-space:nowrap}
+.hb-btn.go{border-color:var(--acc);color:var(--acc2)}
+.hb-btn:active{background:var(--acc);color:#fff}
+/* counter and case */
+.cnt-lead{color:var(--mut)!important;font-size:.86rem!important}
+.jet{display:flex;flex-direction:column;align-items:center;gap:4px;margin:10px 0 14px;padding:14px 10px;background:#05080e;border:1px solid var(--line);border-radius:12px}
+.jet b{font-family:Orbitron,monospace;font-weight:800;font-size:clamp(2rem,11vw,2.8rem);color:var(--amber);text-shadow:0 0 14px rgba(255,179,71,.5);line-height:1}
+.jet.small{margin:4px 0 10px;padding:8px}
+.jet.small b{font-size:1.5rem}
+.jet.pay b{color:#4de08a;text-shadow:0 0 14px rgba(77,224,138,.5)}
+.shelf{display:grid;grid-template-columns:1fr;gap:6px;margin:6px 0}
+.prz{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:46px;padding:0 12px;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:10px;font-size:.88rem;font-weight:700}
+.prz[disabled]{opacity:.45;cursor:default}
+.prz.have{border-color:#4de08a;opacity:1}
+.prz.have .prz-cost{color:#4de08a}
+.prz.locked{opacity:.4}
+.prz-cost{font-family:Orbitron,monospace;font-size:.72rem;color:var(--mut);white-space:nowrap}
+.plaques{display:grid;grid-template-columns:1fr;gap:6px;margin:6px 0}
+.plq{padding:8px 12px;background:#0b1220;border:1px solid var(--line);border-left:4px solid #2a3140;border-radius:10px;opacity:.45}
+.plq.have{opacity:1;border-left-color:var(--amber)}
+.plq b{display:block;font-size:.92rem}
+.plq span{font-size:.78rem;color:var(--mut)}
+.stat-row{display:flex;gap:8px;margin:8px 0 4px}
+.stat-row span{flex:1;display:flex;flex-direction:column;gap:2px;padding:8px;background:#0b1220;border:1px solid var(--line);border-radius:10px;font-size:.6rem;letter-spacing:.14em;color:var(--mut)}
+.stat-row b{font-family:Orbitron,monospace;font-size:.86rem;color:var(--ink);letter-spacing:0}
+.stat-row b.up{color:#4de08a}
+.stat-row b.down{color:#ff8a98}
+.walk{display:flex;align-items:center;gap:6px;margin:4px 0 12px}
+.w-step{flex:1;text-align:center;font-size:.68rem;letter-spacing:.08em;padding:7px 2px;border:1px solid var(--line);border-radius:8px;color:var(--mut)}
+.w-step.on{border-color:var(--acc);color:var(--acc2)}
+.w-dash{width:10px;height:2px;background:var(--line);flex:none}
+.cnt-row{display:flex;flex-direction:column}
+#toast{position:absolute;left:50%;top:calc(10px + var(--st));transform:translate(-50%,-140%);z-index:70;width:min(92vw,22rem);padding:10px 14px;background:linear-gradient(160deg,#1d2740,#121a2b);border:1px solid var(--amber);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.6);transition:transform .35s ease;pointer-events:none}
+#toast.show{transform:translate(-50%,0)}
+#toast .t-lbl{display:block;font-size:.58rem;letter-spacing:.2em;color:var(--amber)}
+#toast b{display:block;font-size:1rem;letter-spacing:.03em}
+#toast .t-note{display:block;font-size:.75rem;color:var(--mut)}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
 /* overlays */
 .overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(3,6,12,.78);z-index:50;padding:calc(12px + var(--st)) 12px calc(12px + var(--sb))}
 .overlay.open{display:flex}
@@ -126,9 +172,15 @@ body.nopixi .screen{display:none!important}
     <header class="bar">
       <a class="portal" href="https://augustineiacopelli.github.io/appaday/" aria-label="AppADay portfolio">AppADay</a>
       <div class="title"><h1>Pachinko Hall</h1><span class="sub">APPADAY 187</span></div>
-      <div class="bankbox"><span class="lbl">BALLS</span><b id="bank-hall">0</b></div>
       <button id="gear-hall" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></button>
     </header>
+    <div class="hallbar">
+      <span class="hb-stat"><span class="lbl">WALLET</span><b id="wallet-hall">0</b></span>
+      <span class="hb-stat"><span class="lbl">TRAY</span><b id="tray-hall" class="amber">0</b></span>
+      <button type="button" id="rate-btn" class="hb-btn">4 YEN</button>
+      <button type="button" id="counter-btn" class="hb-btn go">Counter</button>
+      <button type="button" id="case-btn" class="hb-btn">Case</button>
+    </div>
     <div class="scroll">
       <div id="seat-grid"></div>
       <footer class="foot">
@@ -141,14 +193,18 @@ body.nopixi .screen{display:none!important}
     <div id="hud">
       <button id="btn-back" class="icon-btn" aria-label="Back to the hall"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div id="hud-name" class="hud-name"></div>
-      <div class="hud-bank"><span class="lbl">BALLS</span><b id="hud-bank">0</b></div>
+      <div class="hud-bank"><span class="lbl">TRAY</span><b id="hud-bank">0</b></div>
       <button id="btn-help" class="icon-btn" aria-label="Help for this cabinet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.8.5-1.1 1-1.1 1.8M12 17h.01"/></svg></button>
       <button id="btn-gear" class="icon-btn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></button>
       <div class="hud-row"><span id="hud-mode" class="pill normal">NORMAL</span><span>SPINS <b id="hud-spins">0</b></span><span>SINCE <b id="hud-since">0</b></span></div>
     </div>
     <div id="stage">
       <div id="pixi-host"></div>
-      <button id="refill" class="btn" hidden>Out of balls. Borrow 200</button>
+      <div id="rent-wrap" hidden>
+        <span class="rent-head">The tray is empty</span>
+        <button type="button" id="rent-btn" class="btn">Insert 1,000</button>
+        <span id="rent-note" class="rent-note"></span>
+      </div>
       <div id="controls">
         <div id="stream" role="group" aria-label="Launch stream">
           <button type="button" data-stream="L" class="on" aria-pressed="true" aria-label="Left stream">LEFT</button>
@@ -175,6 +231,16 @@ body.nopixi .screen{display:none!important}
   <div id="help-sheet" class="overlay" role="dialog" aria-modal="true" aria-labelledby="help-title">
     <div class="sheet" id="help-body"></div>
   </div>
+  <div id="counter-sheet" class="overlay" role="dialog" aria-modal="true" aria-labelledby="cnt-title">
+    <div class="sheet">
+      <h2 id="cnt-title">Ball counter</h2>
+      <div id="cnt-body"></div>
+    </div>
+  </div>
+  <div id="case-sheet" class="overlay" role="dialog" aria-modal="true" aria-labelledby="case-title">
+    <div class="sheet" id="case-body"></div>
+  </div>
+  <div id="toast" aria-hidden="true"></div>
   <div id="cdn-error" class="overlay" role="alertdialog" aria-modal="true">
     <div class="sheet"><h2>The renderer did not load</h2><p>PixiJS could not be fetched. Check your connection and reload the page.</p></div>
   </div>

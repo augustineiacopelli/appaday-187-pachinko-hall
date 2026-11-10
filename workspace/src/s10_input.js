@@ -45,11 +45,11 @@ function launching() { return IN.dialHeld || IN.stageHeld || IN.keyHeld; }
 function releaseAll() { IN.dialHeld = false; IN.stageHeld = false; IN.keyHeld = false; }
 function tryLaunch() {
   if (!WORLD || !MACH) return;
-  if (STATE.bank <= 0) { syncHud(true); return; }
+  if (STATE.tray <= 0) { syncHud(true); return; }
   if (WORLD.active() >= MAX_BALLS) return;
   var b = WORLD.launch(IN.stream, IN.power, jitterStream);
   if (b) {
-    STATE.bank--; IN.cd = PHYS.LAUNCH_CD;
+    STATE.tray--; IN.cd = PHYS.LAUNCH_CD;
     Sfx.launch(); markDirty();
   }
 }

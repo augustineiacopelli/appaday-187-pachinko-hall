@@ -22,9 +22,9 @@ async function newPage(browser,w,h,opts){
     const {page,errs}=await newPage(browser,375,667);
     await page.goto(FILE); await page.waitForSelector('html.ready',{timeout:15000});
     await page.screenshot({path:'/tmp/hall.png'});
-    for(const id of ['retro-bell','hanemono','digi','senpuku','battle','kenrimono']){
+    for(const id of ['retro-bell','hanemono','digi','senpuku','battle','kenrimono','smart']){
       await page.evaluate(i=>showCabinet(i),id);
-      await page.evaluate(()=>{IN.stageHeld=true; setPower(0.15);});
+      await page.evaluate(()=>{STATE.tray=4000; IN.stageHeld=true; setPower(0.15);});
       await new Promise(r=>setTimeout(r,id==='digi'?9000:6000));
       await page.screenshot({path:'/tmp/cab_'+id+'.png'});
       await page.evaluate(()=>{IN.stageHeld=false; leaveCabinet();});
@@ -53,7 +53,7 @@ async function newPage(browser,w,h,opts){
     const {page,errs}=await newPage(browser,375,667,{throwStorage:true});
     await page.goto(FILE); await page.waitForSelector('html.ready',{timeout:15000});
     await page.evaluate(()=>showCabinet('hanemono')); await page.evaluate(()=>{IN.stageHeld=true;}); await new Promise(r=>setTimeout(r,2500));
-    console.log('balls bank',await page.evaluate(()=>STATE.bank));
+    console.log('tray',await page.evaluate(()=>STATE.tray),'wallet',await page.evaluate(()=>STATE.wallet));
     console.log(errs.filter(e=>!/ERR_FAILED/.test(e)).join('\n')||'no page errors');
   }
   if(mode==='nopixi'){
@@ -74,6 +74,40 @@ async function newPage(browser,w,h,opts){
       console.log(id,'beginJackpot',ok,await page.evaluate(()=>MACH.mode));
       await page.evaluate(()=>{IN.stageHeld=false; leaveCabinet();});
     }
+    console.log(errs.filter(e=>!/ERR_FAILED/.test(e)).join('\n')||'no page errors');
+  }
+
+  if(mode==='reach'){
+    const {page,errs}=await newPage(browser,375,667);
+    await page.goto(FILE); await page.waitForSelector('html.ready',{timeout:15000});
+    await page.evaluate(()=>showCabinet('digi'));
+    // force a losing super reach that slips one place past the match
+    const info=await page.evaluate(()=>{
+      const st=new OutcomeStream(999,0);
+      for(let i=0;i<300000;i++){ const o=st.next(); const r=evalSpin(CAB,o,{mode:'normal',hid:false,kenri:false});
+        if(!r.hit && r.reach===2 && r.slip){ MACH.spin={res:r,t:0,plan:spinPlan(MACH,r),reached:false}; return {syms:r.syms,end:MACH.spin.plan.end,b:MACH.spin.plan.b}; } }
+      return null; });
+    console.log('forced',JSON.stringify(info));
+    const at=async(frac,tag)=>{ await page.evaluate(f=>{ const sp=MACH.spin; sp.t=sp.plan.b+(sp.plan.end-sp.plan.b)*f; VIEW.update(0.016); },frac);
+      await new Promise(r=>setTimeout(r,120)); await page.screenshot({path:'/tmp/reach_'+tag+'.png'}); };
+    await at(0.05,'start'); await at(0.80,'pause'); await at(0.99,'slip');
+    console.log(errs.filter(e=>!/ERR_FAILED/.test(e)).join('\n')||'no page errors');
+  }
+  if(mode==='counter'){
+    const {page,errs}=await newPage(browser,375,667);
+    await page.goto(FILE); await page.waitForSelector('html.ready',{timeout:15000});
+    await page.evaluate(()=>{STATE.tray=5200; syncHall(); openCounter();});
+    await new Promise(r=>setTimeout(r,2600));
+    await page.screenshot({path:'/tmp/cnt_shelf.png',fullPage:false});
+    const small=await page.evaluate(()=>{ const out=[]; document.querySelectorAll('#counter-sheet button').forEach(e=>{const b=e.getBoundingClientRect(); if(b.height>0&&b.height<44) out.push(e.textContent.slice(0,20)+' '+Math.round(b.height));}); return out; });
+    console.log('small targets in counter:',small.length?small.join(' | '):'none');
+    await page.evaluate(()=>document.getElementById('cnt-special').click());
+    await new Promise(r=>setTimeout(r,500));
+    await page.screenshot({path:'/tmp/cnt_walk.png'});
+    console.log('after exchange tray',await page.evaluate(()=>STATE.tray),'wallet',await page.evaluate(()=>STATE.wallet),'plaques',await page.evaluate(()=>STATE.plaques.join(',')));
+    await page.evaluate(()=>{closeOverlays(); buildCase(); openOverlay('case-sheet');});
+    await new Promise(r=>setTimeout(r,400));
+    await page.screenshot({path:'/tmp/cnt_case.png'});
     console.log(errs.filter(e=>!/ERR_FAILED/.test(e)).join('\n')||'no page errors');
   }
   await browser.close();
